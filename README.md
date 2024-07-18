@@ -15,7 +15,7 @@ Open terminal/cmd/powershell and change directory/folder to the cloned folder.
 The command for the same would be
 
 ```sh
-cd Location\ To/SmartStay
+cd SmartStay
 ```
 
 ### 3: Install the PIP packages/dependencies
