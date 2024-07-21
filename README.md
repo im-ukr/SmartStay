@@ -1,6 +1,6 @@
 ## Installation 
 
-Follow these insturctions to setup your own instance of the app:
+Follow these instructions to setup your own instance of the app:
 
 ### 1: Clone the repo
 
