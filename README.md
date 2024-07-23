@@ -42,6 +42,8 @@ To create the database from the MySQL schema, either:
 
 2: Use the command to do it automatically (from cmd)
 
+*Ensure that Path like "C:\Program Files\MySQL\MySQL Server 8.0\bin"(depending upon the location where it is installed) is present in your system environment variables.
+
 ```sh
 get-content sql/hms.sql | mysql -u<username> -p<password>
 ```
