@@ -75,7 +75,7 @@ class ViewRooms(Frame):
             116.0,
             65.0,
             anchor="nw",
-            text="Prices will update here dynamically",
+            text="Prices will update here dynamically⚡",
             fill="#808080",
             font=("Montserrat SemiBold", 16 * -1),
         )
