@@ -1,19 +1,17 @@
 from pathlib import Path
-
-from tkinter import Frame, Canvas, Entry, Text, Button, PhotoImage, messagebox
+from tkinter import Frame, Canvas, Entry, Button, PhotoImage, messagebox, ttk
+from tkcalendar import DateEntry
 import controller as db_controller
+import datetime
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path("./assets")
 
-
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
-
 def add_reservations():
     AddReservations()
-
 
 class AddReservations(Frame):
     def __init__(self, parent, controller=None, *args, **kwargs):
@@ -123,16 +121,30 @@ class AddReservations(Frame):
 
         self.entry_image_8 = PhotoImage(file=relative_to_assets("entry_8.png"))
         entry_bg_8 = self.canvas.create_image(382.5, 271.0, image=self.entry_image_8)
-        entry_8 = Entry(
+
+        # Calendar for Date
+        self.calendar = DateEntry(
             self,
             bd=0,
             bg="#EFEFEF",
             highlightthickness=0,
             foreground="#777777",
-            font=("Montserrat Bold", 18 * -1),
+            font=("Montserrat Bold", 14 * -1),
+            date_pattern="yyyy-mm-dd"
         )
-        entry_8.place(x=293.0, y=259.0, width=179.0, height=22.0)
-        self.data["check_in"] = entry_8
+        self.calendar.place(x=280.0, y=259.0, width=120.0, height=22.0)
+
+        # Time Selector (Hours and Minutes)
+        self.time_hour = ttk.Combobox(self, width=2, values=[f'{i:02}' for i in range(24)])
+        self.time_hour.place(x=400.0, y=259.0, width=40.0, height=22.0)
+        self.time_hour.current(0)  # set default value
+
+        self.time_minute = ttk.Combobox(self, width=2, values=[f'{i:02}' for i in range(60)])
+        self.time_minute.place(x=438.0, y=259.0, width=40.0, height=22.0)
+        self.time_minute.current(0)  # set default value
+
+        # Removed seconds combobox and set seconds as "00" by default
+        self.data["check_in"] = (self.calendar, self.time_hour, self.time_minute)
 
         self.button_image_1 = PhotoImage(file=relative_to_assets("button_1.png"))
         button_1 = Button(
@@ -188,20 +200,31 @@ class AddReservations(Frame):
             relief="flat",
         )
         button_3.place(x=547.0, y=210.0, width=209.0, height=74.0)
-        # Set default value for entry
-        self.data["check_in"].insert(0, "now")
+
+    def get_datetime(self):
+        # Combine date and time components into a single string
+        date = self.data["check_in"][0].get_date()
+        hour = self.data["check_in"][1].get()
+        minute = self.data["check_in"][2].get()
+
+        return f"{date} {hour}:{minute}:00"  # seconds default to "00"
 
     # Save the data to the database
     def save(self):
-        # check if any fields are empty
-        for label in self.data.keys():
+        # Check if any fields are empty
+        for label in ["g_id", "meal", "r_id"]:
             if self.data[label].get() == "":
                 messagebox.showinfo("Error", "Please fill in all the fields")
                 return
 
+        check_in_time = self.get_datetime()
+
         # Save the reservation
         result = db_controller.add_reservation(
-            *[self.data[label].get() for label in ("g_id", "meal", "r_id", "check_in")]
+            self.data["g_id"].get(),
+            self.data["meal"].get(),
+            self.data["r_id"].get(),
+            check_in_time
         )
 
         if result:
@@ -209,8 +232,8 @@ class AddReservations(Frame):
             self.parent.navigate("view")
             self.parent.refresh_entries()
 
-            # clear all fields
-            for label in self.data.keys():
+            # Clear all fields
+            for label in ["g_id", "meal", "r_id"]:
                 self.data[label].delete(0, "end")
         else:
             messagebox.showerror(
