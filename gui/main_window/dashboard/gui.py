@@ -62,7 +62,7 @@ class Dashboard(Frame):
             anchor="ne",
             text=db_controller.vacant(),
             fill="#5E95FF",
-            font=("Montserrat Bold", 48 * -1),
+            font=("Montserrat Bold", 40 * -1),
             justify="right",
         )
 
@@ -92,7 +92,7 @@ class Dashboard(Frame):
             anchor="ne",
             text=db_controller.booked(),
             fill="#5E95FF",
-            font=("Montserrat Bold", 48 * -1),
+            font=("Montserrat Bold", 40 * -1),
             justify="right",
         )
 
@@ -179,12 +179,12 @@ class Dashboard(Frame):
         )
 
         canvas.create_text(
-            540.0,
+            550.0,
             63.0,
             anchor="ne",
             text=db_controller.get_total_hotel_value(),
             fill="#5E95FF",
-            font=("Montserrat Bold", 48 * -1),
+            font=("Montserrat Bold", 40 * -1),
         )
 
         canvas.entry_image_8 = PhotoImage(file=relative_to_assets("entry_8.png"))
@@ -213,7 +213,7 @@ class Dashboard(Frame):
             anchor="ne",
             text=db_controller.meals(),
             fill="#5E95FF",
-            font=("Montserrat Bold", 48 * -1),
+            font=("Montserrat Bold", 40 * -1),
         )
 
         canvas.entry_image_9 = PhotoImage(file=relative_to_assets("entry_9.png"))
@@ -377,13 +377,20 @@ class Dashboard(Frame):
         fig = Figure(figsize=(2.2, 1.30), dpi=100)
         fig.patch.set_facecolor("#eeefee")
 
+        vacant_rooms = db_controller.vacant()
+        booked_rooms = db_controller.booked()
+        def format_percentage(pct):
+         return f'{pct:.1f}%'
         plot1 = fig.add_subplot(111)
         plot1.pie(
-            [db_controller.vacant(), db_controller.booked()],
-            [0.1, 0.1],
+            [vacant_rooms, booked_rooms],
+            explode=[0.1, 0.1],
             startangle=-30,
-            colors=("#6495ED", "#8A8A8A"),
-        )
+              colors=("#6495ED", "#8A8A8A"),
+              autopct=lambda pct: format_percentage(pct),  # Display percentage on pie chart
+              pctdistance=1.4,
+              textprops={'color': 'black', 'fontsize': 8, 'fontname': 'Arial'}  # Set text color to white and size to 8
+            )
 
         canvas1 = FigureCanvasTkAgg(fig, self)
         canvas1.draw()
@@ -393,7 +400,13 @@ class Dashboard(Frame):
         fig1.patch.set_facecolor("#eeefee")
 
         plot2 = fig1.add_subplot(111)
-        plot2.pie([5, 3], [0.1, 0.1], startangle=-30, colors=("#6495ED", "#8A8A8A"))
+        plot2.pie([5, 3],
+           explode=[0.1, 0.1],
+           startangle=-30,
+         colors=("#6495ED", "#8A8A8A"),
+         autopct=lambda pct: format_percentage(pct),  # Display percentage on pie chart
+         pctdistance=1.4,
+         textprops={'color': 'black', 'fontsize': 8, 'fontname': 'Arial'})
 
         canvas2 = FigureCanvasTkAgg(fig1, self)
         canvas2.draw()
