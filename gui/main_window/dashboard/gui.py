@@ -379,6 +379,10 @@ class Dashboard(Frame):
 
         vacant_rooms = db_controller.vacant()
         booked_rooms = db_controller.booked()
+
+        deluxe, normal = db_controller.bookings()
+
+
         def format_percentage(pct):
          return f'{pct:.1f}%'
         plot1 = fig.add_subplot(111)
@@ -400,7 +404,7 @@ class Dashboard(Frame):
         fig1.patch.set_facecolor("#eeefee")
 
         plot2 = fig1.add_subplot(111)
-        plot2.pie([5, 3],
+        plot2.pie([deluxe, normal],
            explode=[0.1, 0.1],
            startangle=-30,
          colors=("#6495ED", "#8A8A8A"),
