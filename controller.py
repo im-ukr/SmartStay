@@ -180,11 +180,12 @@ def vacant():
 
 
 def bookings():
-    cmd = f"select count(rs.id) from reservations rs , rooms ros where rs.r_id = ros.id and ros.room_type = 'D';"
+    cmd = f"select count(rs.id) from reservations rs , rooms ros where rs.r_id = ros.id and ros.room_type = 'D' and rs.check_out IS NULL LIMIT 0, 1000;"
     cursor.execute(cmd)
     deluxe = cursor.fetchone()[0]
+    
 
-    cmd1 = f"select count(rs.id) from reservations rs , rooms ros where rs.r_id = ros.id and ros.room_type = 'N';"
+    cmd1 = f"select count(rs.id) from reservations rs , rooms ros where rs.r_id = ros.id and ros.room_type = 'N' and rs.check_out IS NULL LIMIT 0, 1000;"
     cursor.execute(cmd1)
     Normal = cursor.fetchone()[0]
 
