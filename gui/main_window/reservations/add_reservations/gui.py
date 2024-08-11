@@ -130,7 +130,8 @@ class AddReservations(Frame):
             highlightthickness=0,
             foreground="#777777",
             font=("Montserrat Bold", 14 * -1),
-            date_pattern="yyyy-mm-dd"
+            date_pattern="yyyy-mm-dd",
+            mindate=datetime.date.today()
         )
         self.calendar.place(x=280.0, y=259.0, width=120.0, height=22.0)
 
