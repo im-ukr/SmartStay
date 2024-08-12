@@ -5,11 +5,12 @@ from tkinter import (
     Canvas,
     Entry,
     StringVar,
-    Text,
     Button,
     PhotoImage,
     messagebox,
+    ttk
 )
+from pathlib import Path
 import controller as db_controller
 
 OUTPUT_PATH = Path(__file__).parent
@@ -68,15 +69,6 @@ class AddRooms(Frame):
         )
         entry_1.place(x=52.0, y=153.0, width=179.0, height=22.0)
 
-        self.canvas.create_text(
-            52.0,
-            155.0,
-            anchor="nw",
-            text="1024",
-            fill="#000000",
-            font=("Montserrat SemiBold", 17 * -1),
-        )
-
         self.image_image_2 = PhotoImage(file=relative_to_assets("image_2.png"))
         image_2 = self.canvas.create_image(258.0, 259.0, image=self.image_image_2)
 
@@ -102,15 +94,6 @@ class AddRooms(Frame):
         )
         entry_2.place(x=52.0, y=259.0, width=411.0, height=22.0)
 
-        self.canvas.create_text(
-            52.0,
-            261.0,
-            anchor="nw",
-            text="1024",
-            fill="#000000",
-            font=("Montserrat SemiBold", 17 * -1),
-        )
-
         self.image_image_3 = PhotoImage(file=relative_to_assets("image_3.png"))
         image_3 = self.canvas.create_image(378.0, 153.0, image=self.image_image_3)
 
@@ -118,33 +101,29 @@ class AddRooms(Frame):
             293.0,
             128.0,
             anchor="nw",
-            text="Type: (D)elux/(N)ormal",
+            text="Type",
             fill="#5E95FF",
             font=("Montserrat Bold", 14 * -1),
         )
 
-        self.entry_image_3 = PhotoImage(file=relative_to_assets("entry_3.png"))
-        entry_bg_3 = self.canvas.create_image(382.5, 165.0, image=self.entry_image_3)
-        entry_3 = Entry(
-            self,
-            textvariable=self.data["type"],
-            bd=0,
-            bg="#EFEFEF",
-            highlightthickness=0,
-            font=("Montserrat Bold", 18 * -1),
-            foreground="#777777",
-        )
-        entry_3.place(x=293.0, y=153.0, width=179.0, height=22.0)
+        # Dropdown menu for room type using Combobox
+        room_types = {"Delux": "D", "Normal": "N"}
+        self.room_type_var = StringVar(value="Delux")
+        self.data["type"].set(room_types[self.room_type_var.get()])
 
-        self.canvas.create_text(
-            293.0,
-            155.0,
-            anchor="nw",
-            text="1024",
-            fill="#000000",
-            font=("Montserrat SemiBold", 17 * -1),
-        )
+        self.room_type_menu = ttk.Combobox(
+        self,
+        textvariable=self.room_type_var,
+        values=list(room_types.keys()),
+    font=("Montserrat Bold", 14 * -1),
+)
+        self.room_type_menu.bind("<<ComboboxSelected>>", lambda _: self.data["type"].set(room_types[self.room_type_var.get()]))
 
+# Set the width of the Combobox (number of characters)
+        self.room_type_menu.configure(width=8)  # adjust as needed
+
+# Place it on the canvas
+        self.room_type_menu.place(x=293.0, y=153.0, width=100.0, height=22.0)
         self.button_image_1 = PhotoImage(file=relative_to_assets("button_1.png"))
         button_1 = Button(
             self,
@@ -219,8 +198,9 @@ class AddRooms(Frame):
             self.parent.windows.get("view").handle_refresh()
             # clear all fields
             for label in self.data.keys():
-                self.data[label].set(0)
+                self.data[label].set("")
         else:
             messagebox.showerror(
                 "Error", "Unable to add room. Please make sure the data is validated"
             )
+
