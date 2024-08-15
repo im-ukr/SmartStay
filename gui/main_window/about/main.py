@@ -73,7 +73,7 @@ class About(Frame):
             56.0,
             138.0,
             anchor="nw",
-            text="Person",
+            text="Utkarsh",
             fill="#5E95FF",
             font=("Montserrat Bold", 26 * -1),
         )
@@ -82,7 +82,7 @@ class About(Frame):
             418.0,
             138.0,
             anchor="nw",
-            text="Person",
+            text="Kanak",
             fill="#5E95FF",
             font=("Montserrat Bold", 26 * -1),
         )
@@ -91,7 +91,7 @@ class About(Frame):
             56.0,
             170.0,
             anchor="nw",
-            text="1",
+            text="Roy",
             fill="#5E95FF",
             font=("Montserrat Bold", 18 * -1),
         )
@@ -100,12 +100,12 @@ class About(Frame):
             418.0,
             170.0,
             anchor="nw",
-            text="2",
+            text="Pandit",
             fill="#5E95FF",
             font=("Montserrat Bold", 18 * -1),
         )
 
-        self.image_image_4 = PhotoImage(file=relative_to_assets("image_4.png"))
+        self.image_image_4 = PhotoImage(file=relative_to_assets("imukr.png"))
         image_4 = self.canvas.create_image(308.0, 150.0, image=self.image_image_4)
 
         self.canvas.create_rectangle(
@@ -123,7 +123,7 @@ class About(Frame):
             197.0,
             352.0,
             anchor="nw",
-            text="DAEEH Project Sem VII 2024",
+            text="Dynamic Pricing Straetgies for Hotel Rooms",
             fill="#5E95FF",
             font=("Montserrat Bold", 16 * -1),
         )
@@ -132,7 +132,7 @@ class About(Frame):
             418.0,
             207.0,
             anchor="nw",
-            text="Lorem ipsum dolor sit amet,",
+            text="B.Tech Undergrad specializing in",
             fill="#777777",
             font=("Montserrat Medium", 13 * -1),
         )
@@ -141,7 +141,7 @@ class About(Frame):
             418.0,
             223.0,
             anchor="nw",
-            text="consectetur adipiscing elit.",
+            text="Computer Science. Developed an",
             fill="#777777",
             font=("Montserrat Medium", 13 * -1),
         )
@@ -150,7 +150,7 @@ class About(Frame):
             418.0,
             239.0,
             anchor="nw",
-            text="Sed do eiusmod tempor",
+            text="email sending feature that integrates",
             fill="#777777",
             font=("Montserrat Medium", 13 * -1),
         )
@@ -159,7 +159,7 @@ class About(Frame):
             418.0,
             255.0,
             anchor="nw",
-            text="incididunt ut labore et dolore",
+            text="seamlessly. Worked on developing",
             fill="#777777",
             font=("Montserrat Medium", 13 * -1),
         )
@@ -168,7 +168,7 @@ class About(Frame):
             418.0,
             271.0,
             anchor="nw",
-            text="magna aliqua.",
+            text="smart pricing parameters alongside.",
             fill="#777777",
             font=("Montserrat Medium", 13 * -1),
         )
@@ -177,7 +177,7 @@ class About(Frame):
             56.0,
             207.0,
             anchor="nw",
-            text="Lorem ipsum dolor sit amet,",
+            text="B.Tech Undergrad specializing in",
             fill="#777777",
             font=("Montserrat Medium", 13 * -1),
         )
@@ -186,7 +186,7 @@ class About(Frame):
             56.0,
             223.0,
             anchor="nw",
-            text="consectetur adipiscing elit.",
+            text="Artificial Intelligence and Data Science.",
             fill="#777777",
             font=("Montserrat Medium", 13 * -1),
         )
@@ -195,7 +195,7 @@ class About(Frame):
             56.0,
             239.0,
             anchor="nw",
-            text="Sed do eiusmod tempor",
+            text="The focus was on designing a robust",
             fill="#777777",
             font=("Montserrat Medium", 13 * -1),
         )
@@ -204,7 +204,7 @@ class About(Frame):
             56.0,
             255.0,
             anchor="nw",
-            text="incididunt ut labore et dolore",
+            text="database and implementing Dynamic",
             fill="#777777",
             font=("Montserrat Medium", 13 * -1),
         )
@@ -213,7 +213,7 @@ class About(Frame):
             56.0,
             271.0,
             anchor="nw",
-            text="magna aliqua.",
+            text="Pricing Engine.",
             fill="#777777",
             font=("Montserrat Medium", 13 * -1),
         )
