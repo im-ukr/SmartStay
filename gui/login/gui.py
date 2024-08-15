@@ -161,7 +161,7 @@ class Login(Toplevel):
             90.0,
             431.0,
             anchor="nw",
-            text="DAEEH Project Sem VII 2024",
+            text="Dynamic Pricing for your needs!",
             fill="#FFFFFF",
             font=("Montserrat Bold", 18 * -1),
         )
