@@ -38,7 +38,7 @@ pip install -r requirements.txt
 
 To create the database from the MySQL schema, either:
 
-1: Copy-paste the contents of [sql/hms.sql](sql/hms.sql) directly into the MySQL command line, or
+1: Copy-paste the contents of [sql/smartstay.sql](sql/smartstay.sql) directly into the MySQL command line, or
 
 2: Use the command to do it automatically (from cmd)
 
