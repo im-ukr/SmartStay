@@ -10,14 +10,23 @@ ASSETS_PATH = OUTPUT_PATH / Path("./assets")
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
-def add_reservations():
-    AddReservations()
+def get_occupied_rooms():
+    """
+    Retrieve the list of room numbers that are currently occupied (i.e., where check_out is NULL).
+    """
+    cmd = "SELECT rooms.room_no FROM rooms JOIN reservations ON rooms.id = reservations.r_id WHERE reservations.check_out IS NULL;"
+    db_controller.cursor.execute(cmd)
+    
+    occupied_rooms = db_controller.cursor.fetchall()
+    
+    # Return a list of room numbers jo occupied hai
+    return [int(room[0]) for room in occupied_rooms]
 
 class AddReservations(Frame):
     def __init__(self, parent, controller=None, *args, **kwargs):
         Frame.__init__(self, parent, *args, **kwargs)
         self.parent = parent
-        self.data = {"g_id": "", "check_in": "", "meal": "", "r_id": ""}
+        self.data = {"g_id": "", "check_in": "", "meal": "", "r_id": "", "booked_rooms": ""}
 
         self.configure(bg="#FFFFFF")
 
@@ -202,6 +211,57 @@ class AddReservations(Frame):
         )
         button_3.place(x=547.0, y=210.0, width=209.0, height=74.0)
 
+        # Add a dropdown list booked room IDs ka
+        self.canvas.create_text(
+            550.0,
+            310.0,
+            anchor="nw",
+            text="View Booked Rooms:",
+            fill="#5E95FF",
+            font=("Montserrat Bold", 14 * -1),
+        )
+
+        self.combobox_booked_rooms = ttk.Combobox(
+            self,
+            values=self.get_booked_rooms()  # This function is called to display the list of booked rooms
+        )
+        self.combobox_booked_rooms.place(x=550.0, y=335.0, width=179.0, height=22.0)
+        self.data["booked_rooms"] = self.combobox_booked_rooms
+
+        # Add a text entry widget to filter the combobox
+        self.filter_entry = Entry(self)
+        self.filter_entry.place(x=550.0, y=360.0, width=179.0, height=22.0)
+        self.filter_entry.bind("<KeyRelease>", self.update_combobox)
+        self.filter_entry.bind("<FocusIn>", self.on_focus_in)
+        self.filter_entry.bind("<FocusOut>", self.on_focus_out)
+
+        self.placeholder_text = "Or type here to check.."
+        self.set_placeholder()
+
+    def set_placeholder(self):
+        self.filter_entry.insert(0, self.placeholder_text)
+        self.filter_entry.config(fg='grey')
+
+    def on_focus_in(self, event):
+        if self.filter_entry.get() == self.placeholder_text:
+            self.filter_entry.delete(0, 'end')
+            self.filter_entry.config(fg='black')
+
+    def on_focus_out(self, event):
+        if not self.filter_entry.get():
+            self.set_placeholder()
+
+    def refresh_booked_rooms(self):
+
+        self.combobox_booked_rooms['values'] = self.get_booked_rooms()
+
+    def update_combobox(self, event):
+        filter_text = self.filter_entry.get()
+        filtered_rooms = [room for room in self.get_booked_rooms() if filter_text in room]
+        self.combobox_booked_rooms['values'] = filtered_rooms
+        if filter_text in filtered_rooms:
+            self.combobox_booked_rooms.set(filter_text)
+
     def get_datetime(self):
         # Combine date and time components into a single string
         date = self.data["check_in"][0].get_date()
@@ -209,6 +269,11 @@ class AddReservations(Frame):
         minute = self.data["check_in"][2].get()
 
         return f"{date} {hour}:{minute}:00"  # seconds default to "00"
+
+    def get_booked_rooms(self):
+
+        occupied_rooms = get_occupied_rooms()
+        return [str(room) for room in occupied_rooms]
 
     # Save the data to the database
     def save(self):
@@ -232,6 +297,9 @@ class AddReservations(Frame):
             messagebox.showinfo("Success", "Reservation added successfully")
             self.parent.navigate("view")
             self.parent.refresh_entries()
+
+            # Refresh booked rooms dropdown
+            self.refresh_booked_rooms()
 
             # Clear all fields
             for label in ["g_id", "meal", "r_id"]:
