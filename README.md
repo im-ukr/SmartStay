@@ -1,3 +1,5 @@
+The Final Pricing Model is [notebooks/Dynamic Pricing Model/Final-model.ipynb](notebooks/Dynamic Pricing Model/Final-model.ipynb)
+
 ## Installation 
 
 Follow these instructions to setup your own instance of the app:
