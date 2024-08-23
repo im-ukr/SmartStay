@@ -11,3 +11,5 @@ generate your api key from https://aistudio.google.com/app/apikey
 3. The database as mentioned in [sql/smartstay.sql](https://github.com/im-ukr/SmartStay/blob/test/sql/smartstay.sql)
 
 4. Any other file present in this directory.
+
+5. Install all the requirements mentioned in the 1st cell of [Final-model.ipynb](https://github.com/im-ukr/SmartStay/blob/test/notebooks/Dynamic%20Pricing%20Model/Final-model.ipynb) by removing the comments.
