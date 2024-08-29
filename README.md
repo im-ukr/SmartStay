@@ -1,3 +1,4 @@
+Dynamic Pricing System
 The Final Pricing Model can be found here [notebooks/Dynamic Pricing Model/Final-model.ipynb](https://github.com/im-ukr/SmartStay/blob/test/notebooks/Dynamic%20Pricing%20Model/Final-model.ipynb)
 
 ## Installation 
