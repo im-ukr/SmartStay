@@ -1,4 +1,4 @@
-Moddularized-version
+Modularized-version
 
 To run this code you'd need:
 
