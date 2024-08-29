@@ -12,4 +12,4 @@ generate your api key from https://aistudio.google.com/app/apikey
 
 4. Any other file present in this directory.
 
-5. Install all the requirements mentioned in the 1st cell of [Final-model.ipynb](https://github.com/im-ukr/SmartStay/blob/test/notebooks/Dynamic%20Pricing%20Model/Final-model.ipynb) by removing the comments.
+5. Install all the requirements mentioned in [Final-model.ipynb](https://github.com/im-ukr/SmartStay/blob/test/notebooks/Dynamic%20Pricing%20Model/Final-model.ipynb) 
