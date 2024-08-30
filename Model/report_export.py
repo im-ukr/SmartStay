@@ -35,6 +35,7 @@ def report_export():
     from IPython.display import display, clear_output 
     from dotenv import load_dotenv 
     import google.generativeai as genai
+    import db_config
 
     # Configure generative AI API key
     genai.configure(api_key=os.environ['GOOGLE_API_KEY'])
@@ -42,12 +43,12 @@ def report_export():
     # Load environment variables
     load_dotenv()
 
-    # Database connection parameters
-    username = 'root'
-    password = 'iamukr77'
-    host = 'localhost'
-    port = '3306'  # Default MySQL port
-    database = 'smartstay'  # Your schema name
+    # Database connection parameters from db_config
+    username = db_config.username
+    password = db_config.password
+    host = db_config.host
+    port = db_config.port
+    database = db_config.database
 
     # Create an engine instance with provided credentials
     engine = create_engine(f'mysql+pymysql://{username}:{password}@{host}:{port}/{database}')
@@ -921,13 +922,13 @@ def report_export():
     pdf.ln(2)  
 
     # Position to add signature image
-    # pdf.set_xy(160, 250)  
-    # pdf.image("sign-ukr.png", w=30) 
+    pdf.set_xy(160, 250)  
+    pdf.image("sign-ukr.png", w=30) 
 
     # Text below the signature
-    # pdf.set_xy(160, 265)  
-    # pdf.set_font("Arial", '', 12)
-    # pdf.cell(0, 10, "Utkarsh Roy - SmartStay", 0, 1, 'C')
+    pdf.set_xy(160, 265)  
+    pdf.set_font("Arial", '', 12)
+    pdf.cell(0, 10, "Utkarsh Roy - SmartStay", 0, 1, 'C')
 
     image_files = [
     "vacancy_status.png",
