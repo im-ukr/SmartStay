@@ -57,7 +57,7 @@ This will create and setup the database. If the above command doesn't work then 
 
 ### 5: Add database credentials to the app
 
-In `.env` file(create it outside of all folders), it should contain `username` and `password` values of MySQL credentials.
+In `.env` file(create it outside of all folders), it should contain `username` and `password` values of MySQL installed on your system.
 
 ### 6: Installing Fonts
 
