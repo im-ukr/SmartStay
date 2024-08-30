@@ -24,7 +24,7 @@ passw="password"
 
 3. Email.csv file containing the email list you'd like to mail the final report to.
 
-4. The database as mentioned in [sql/smartstay.sql](https://github.com/im-ukr/SmartStay/blob/test/sql/smartstay.sql)
+4. The database set up as mentioned in [sql/smartstay.sql](https://github.com/im-ukr/SmartStay/blob/test/sql/smartstay.sql)
 
 5. Any other file present in this directory.
 
