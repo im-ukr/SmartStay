@@ -1,6 +1,6 @@
  Modularized-version : [Model/final-model.ipynb](https://github.com/im-ukr/SmartStay/blob/test/Model/final-model.ipynb)
 
-To run this code you'd need:
+To run this code you'd need these 6 things set:
 
 1. Environment Variables File (.env):
 This file should contain your Google API key. Generate your api key from https://aistudio.google.com/app/apikey
