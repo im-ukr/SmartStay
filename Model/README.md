@@ -8,7 +8,7 @@ Content of .env file:
 ```sh
 GOOGLE_API_KEY="your_google_api_key_here"
 ```
-2. Create db_config.py in this directory containing the following:
+2. Database and Email credentials(db_config.py) with the following content:
 ```sh
 # db_config.py
 username = 'root'
