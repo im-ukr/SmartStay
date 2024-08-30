@@ -260,7 +260,7 @@ def fetch_reservation_and_calculate(room_no, session):
     
     # Send the PDF via email
     try:
-        yag = yagmail.SMTP("smartstaytcet@gmail.com", "vmla cyse ruho svsc") 
+        yag = yagmail.SMTP(db_config.email, db_config.passw) 
         subject = "Your Booking Receipt - SmartStay"
         body = "Dear Guest,\n\nPlease find attached your booking receipt.\n\nBest Regards,\nSmartStay Team"
         yag.send(to=reservation.guest.email_id, subject=subject, contents=body, attachments=filename)

@@ -506,7 +506,7 @@ def room_price_computation():
         
             # Send the PDF via email
             try:
-                yag = yagmail.SMTP("smartstaytcet@gmail.com", "vmla cyse ruho svsc")
+                yag = yagmail.SMTP(db_config.email, db_config.passw)
                 subject = "Your Booking Information"
                 body = "Dear Guest,\n\nPlease find attached your booking information.\n\nBest Regards,\nSmartStay Team"
                 yag.send(to=guest.email_id, subject=subject, contents=body, attachments=pdf_file_name)

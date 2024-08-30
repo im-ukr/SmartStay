@@ -969,8 +969,7 @@ def report_export():
 
     # Send the PDF via email
     try:
-        yag = yagmail.SMTP("smartstaytcet@gmail.com", "vmla cyse ruho svsc")
-    
+        yag = yagmail.SMTP(db_config.email, db_config.passw)
         for email in email_list:
             yag.send(to=email, subject=subject, contents=body, attachments=pdf_file_name)
             print(f"\033[1mThe copy of the same is successfully mailed to {email}!\033[0m")
