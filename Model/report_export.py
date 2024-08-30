@@ -922,13 +922,13 @@ def report_export():
     pdf.ln(2)  
 
     # Position to add signature image
-    pdf.set_xy(160, 250)  
-    pdf.image("sign-ukr.png", w=30) 
+    #pdf.set_xy(160, 250)  
+    #pdf.image("sign-ukr.png", w=30) 
 
     # Text below the signature
-    pdf.set_xy(160, 265)  
-    pdf.set_font("Arial", '', 12)
-    pdf.cell(0, 10, "Utkarsh Roy - SmartStay", 0, 1, 'C')
+    #pdf.set_xy(160, 265)  
+    #pdf.set_font("Arial", '', 12)
+    #pdf.cell(0, 10, "Utkarsh Roy - SmartStay", 0, 1, 'C')
 
     image_files = [
     "vacancy_status.png",
