@@ -5,7 +5,9 @@ To run this code you'd need:
 1. Environment Variables File (.env):
 This file should contain your Google API key.
 content of .env file:
+```sh
 GOOGLE_API_KEY="your_google_api_key_here"
+```
 generate your api key from https://aistudio.google.com/app/apikey
 
 3. Email.csv file containing the email list you'd like to mail the final report to.
