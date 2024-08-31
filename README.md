@@ -54,7 +54,7 @@ get-content sql/smartstay.sql | mysql -u<username> -p<password>
 This will create and setup the database. If the above command doesn't work then just copy paste the contents of this file in MySQL command line and execute it to set up the database.
 
 (**<u>Note</u>**: Don't **include the "<>" angular brackets** in the command, and replace the `<username>` and `<password>` with the your credentials created in MySQL. For example: -uroot -piamukr77
-when username is root and password is iamuk77.
+when username is root and password is iamuk77.(Ensure no space is present after u or p)
 
 ### 5: Add database credentials to the app
 
