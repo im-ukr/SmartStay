@@ -11,8 +11,8 @@ GOOGLE_API_KEY="your_google_api_key_here"
 2. Database and Email credentials(db_config.py) with the following content:
 ```sh
 # db_config.py
-username = 'root'
-password = 'pass'
+username = 'your-username'
+password = 'your-password'
 host = 'localhost'
 port = '3306'
 database = 'smartstay'
