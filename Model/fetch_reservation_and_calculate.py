@@ -202,6 +202,8 @@ def fetch_reservation_and_calculate(room_no, session):
 
     # Add details as cells
     pdf.set_font("Arial", size=12)
+    pdf.cell(50, 10, txt="Guest ID", border=1)
+    pdf.cell(0, 10, txt=str(reservation.g_id), border=1, ln=True)
     pdf.cell(50, 10, txt="Guest Name", border=1)
     pdf.cell(0, 10, txt=reservation.guest.name, border=1, ln=True)
     pdf.cell(50, 10, txt="Check-in Date", border=1)
@@ -216,8 +218,6 @@ def fetch_reservation_and_calculate(room_no, session):
     pdf.cell(0, 10, txt=str(reservation.room.price), border=1, ln=True)
     pdf.cell(50, 10, txt="Duration of Stay (Days)", border=1)
     pdf.cell(0, 10, txt=str(duration), border=1, ln=True)
-    pdf.cell(50, 10, txt="Meal Included", border=1)
-    pdf.cell(0, 10, txt="Yes" if reservation.meal else "No", border=1, ln=True)
     pdf.cell(50, 10, txt="Meal Charges", border=1)
     pdf.cell(0, 10, txt="Not Applicable" if meal_charge == 0 else f"{meal_charge}", border=1, ln=True)
     pdf.cell(50, 10, txt="Discount", border=1)
@@ -268,4 +268,3 @@ def fetch_reservation_and_calculate(room_no, session):
         print(f"\033[1mBooking Receipt successfully mailed to {reservation.guest.email_id}!\033[0m")
     except Exception as e:
         print(f"Failed to send email: {e}")
-
