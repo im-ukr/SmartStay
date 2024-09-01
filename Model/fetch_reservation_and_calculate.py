@@ -107,6 +107,27 @@ class Loyalty(Base):
     email_id = Column(String(50), default=None)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
+
+# Define the ORM mapping for the CLV table
+class CLV(Base):
+    __tablename__ = 'CLV'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    guest_id = Column(Integer)
+    guest_name = Column(String(30))          
+    email_id = Column(String(50))            
+    check_in_date = Column(DateTime)
+    check_out_date = Column(DateTime)
+    room_number = Column(Integer)
+    room_type = Column(String(2))            
+    room_price_per_day = Column(Integer)     
+    duration_of_stay = Column(Integer)
+    meal_charges = Column(Integer, default=0)  
+    discount = Column(Integer, default=0)      
+    gst = Column(Integer)                    
+    grand_total_amount = Column(Integer)     
+    created_at = Column(DateTime, default=datetime.datetime.now(datetime.timezone.utc))
+
+
 Session = sessionmaker(bind=engine)
 session = Session()
 
@@ -172,6 +193,59 @@ def fetch_reservation_and_calculate(room_no, session):
 
     print("\nReservation Details:")
     print(table)
+
+    # Adding above data to CLV Table
+    clv = CLV(
+    guest_id=reservation.g_id,
+    guest_name=reservation.guest.name,
+    email_id=reservation.guest.email_id,
+    check_in_date=reservation.check_in,
+    check_out_date=reservation.check_out,
+    room_number=reservation.room.room_no,
+    room_type=reservation.room.room_type,
+    room_price_per_day=reservation.room.price,
+    duration_of_stay=duration,
+    meal_charges=meal_charge,
+    discount=discount,
+    gst=gst,
+    grand_total_amount=total_amount_with_gst
+    )
+    
+    session.add(clv)
+    session.commit()
+
+    # Fetch all records from the CLV table
+    clv_data = session.query(CLV).all()
+
+    # Convert the data into a list of dictionaries
+    clv_list = [
+    {
+        'id': record.id,
+        'guest_id': record.guest_id,
+        'guest_name': record.guest_name,
+        'email_id': record.email_id,
+        'check_in_date': record.check_in_date,
+        'check_out_date': record.check_out_date,
+        'room_number': record.room_number,
+        'room_type': record.room_type,
+        'room_price_per_day': record.room_price_per_day,
+        'duration_of_stay': record.duration_of_stay,
+        'meal_charges': record.meal_charges,
+        'discount': record.discount,
+        'gst': record.gst,
+        'grand_total_amount': record.grand_total_amount,
+        'created_at': record.created_at
+    }
+        for record in clv_data
+    ]
+
+    df_clv = pd.DataFrame(clv_list)
+
+    # Save the DataFrame to a CSV file.
+    csv_filename = 'clv_data.csv'
+    df_clv.to_csv(csv_filename, index=False)
+
+    print(f"CLV data saved as {csv_filename}")
 
     # Generate PDF
     pdf = FPDF()
