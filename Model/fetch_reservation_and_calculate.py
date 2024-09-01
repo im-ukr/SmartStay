@@ -156,6 +156,7 @@ def fetch_reservation_and_calculate(room_no, session):
     table.field_names = ["Field", "Data"]
     table.add_row(["Guest ID", reservation.g_id])
     table.add_row(["Guest Name", reservation.guest.name])
+    table.add_row(["Email ID", reservation.guest.email_id])
     table.add_row(["Check-in Date", reservation.check_in.strftime('%Y-%m-%d %H:%M:%S')])
     table.add_row(["Check-out Date", reservation.check_out.strftime('%Y-%m-%d %H:%M:%S')])
     table.add_row(["Room Number", reservation.room.room_no])
@@ -182,11 +183,11 @@ def fetch_reservation_and_calculate(room_no, session):
     transaction_number = f"T{random.randint(100000, 999999)}"
     payment_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     
-    pdf.set_font("Arial", 'B', 16)
+    pdf.set_font("Arial", 'B', 14)
     pdf.cell(200, 10, txt="SmartStay", ln=True, align='C')
     pdf.cell(200, 10, txt="Booking Receipt", ln=True, align='C')
     pdf.cell(200, 10, txt=f"Receipt ID: {receipt_id}", ln=True, align='C')
-    pdf.ln(7)
+    pdf.ln(2)
     
     pdf.set_font("Arial", size=12)
     pdf.cell(200, 10, txt=f"Dear {reservation.guest.name},", ln=True)
@@ -206,6 +207,8 @@ def fetch_reservation_and_calculate(room_no, session):
     pdf.cell(0, 10, txt=str(reservation.g_id), border=1, ln=True)
     pdf.cell(50, 10, txt="Guest Name", border=1)
     pdf.cell(0, 10, txt=reservation.guest.name, border=1, ln=True)
+    pdf.cell(50, 10, txt="Email ID", border=1)
+    pdf.cell(0, 10, txt=reservation.guest.email_id, border=1, ln=True)
     pdf.cell(50, 10, txt="Check-in Date", border=1)
     pdf.cell(0, 10, txt=reservation.check_in.strftime('%Y-%m-%d %H:%M:%S'), border=1, ln=True)
     pdf.cell(50, 10, txt="Check-out Date", border=1)
@@ -244,14 +247,12 @@ def fetch_reservation_and_calculate(room_no, session):
     
     pdf.ln(2)
     
-    pdf.set_font("Arial", 'B', 12)
-    pdf.multi_cell(0, 10, txt="We hope you had a pleasant stay!")
-    pdf.ln(1)
-    pdf.set_font("Arial", 'I', 10)
-    pdf.multi_cell(0, 10, txt="We look forward to welcoming you back. Safe travels!")
-
-    pdf.ln(1)
-    pdf.set_font("Arial", 'I', 10)
+    pdf.set_font("Arial",'B', 10)
+    pdf.cell(0, 10, txt="We hope you had a pleasant stay! Looking forward to welcoming you back. Safe Travels!", ln=True)
+    #pdf.set_font("Arial", 'B', 10)
+    #pdf.cell(0, 10, txt="Safe travels!")
+    #pdf.set_font("Arial", 'I', 10)
+    pdf.set_font("Arial",'I', 10)
     pdf.cell(200, 10, txt=f"Time Generated At: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", ln=True)
     
     filename = f"Booking_Receipt_{reservation.guest.id}.pdf"
