@@ -557,7 +557,7 @@ def room_price_computation():
                     # Apply loyalty discount if applicable
                     new_price, change = apply_loyalty_discount(new_price, guest, session)
                     prices.append(new_price)
-                    labels.append('Loyalty Discount')
+                    labels.append('CLV-oriented Discount')
                     changes.append(change)
                 
                     # Apply special offer period specific date
