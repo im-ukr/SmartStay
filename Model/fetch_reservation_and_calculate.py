@@ -154,6 +154,7 @@ def fetch_reservation_and_calculate(room_no, session):
     # Displaying details in a tabular format using PrettyTable
     table = PrettyTable()
     table.field_names = ["Field", "Data"]
+    table.add_row(["Guest ID", reservation.g_id])
     table.add_row(["Guest Name", reservation.guest.name])
     table.add_row(["Check-in Date", reservation.check_in.strftime('%Y-%m-%d %H:%M:%S')])
     table.add_row(["Check-out Date", reservation.check_out.strftime('%Y-%m-%d %H:%M:%S')])
