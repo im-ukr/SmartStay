@@ -248,3 +248,23 @@ CREATE TABLE `loyalty` (
   ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
   
   insert into `loyalty`(`guest_id`,`email_id`) values (2,'utkarsh.roy25@gmail.com')
+  
+CREATE TABLE clv (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    guest_id INT NOT NULL,
+    guest_name VARCHAR(50) NOT NULL,       
+    email_id VARCHAR(50) NOT NULL,
+    check_in_date DATETIME NOT NULL,
+    check_out_date DATETIME NOT NULL,
+    room_number INT NOT NULL,
+    room_type VARCHAR(10) NOT NULL,       
+    room_price_per_day DECIMAL(10, 2) NOT NULL,  
+    duration_of_stay INT NOT NULL,
+    meal_charges DECIMAL(10, 2) DEFAULT 0, 
+    discount DECIMAL(10, 2) DEFAULT 0,     
+    gst DECIMAL(10, 2) NOT NULL,           
+    grand_total_amount DECIMAL(10, 2) NOT NULL, 
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+select * from clv;
