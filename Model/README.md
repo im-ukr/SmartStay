@@ -80,4 +80,10 @@ Room price is computed in [Option 1](https://github.com/im-ukr/SmartStay/blob/te
 - If occupancy is below 25%, prices decrease by 10%.
 - If occupancy is above 85%, prices increase by 15%.
 
-![parameters](https://github.com/im-ukr/SmartStay/blob/test/Model/assets/parameters.png)
+![parameters.png](https://github.com/im-ukr/SmartStay/blob/test/Model/assets/parameters.png)
+
+# Final Receipt Generation 
+
+Final Receipt is displayed in [Option 2](https://github.com/im-ukr/SmartStay/blob/test/Model/fetch_reservation_and_calculate.py) depending on the duration of stay.
+
+[Final Receipt.png](https://github.com/im-ukr/SmartStay/blob/test/Model/assets/Final%20Receipt.png)
