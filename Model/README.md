@@ -36,8 +36,7 @@ passw="password"
 
 6. You should have all the requirements installed as mentioned in [notebooks/Dynamic Pricing Model/Final-model.ipynb](https://github.com/im-ukr/SmartStay/blob/test/notebooks/Dynamic%20Pricing%20Model/Final-model.ipynb). **This directory contains the modularized final model of the same file.**
 
-# B. Documentation divided over a total of 4 sections. 
-# Section 1 - Pricing Adjustments Overview
+# (Documentation) Section 1 - Pricing Adjustments Overview
 
 Room price is computed for new bookings in [Option 1](https://github.com/im-ukr/SmartStay/blob/test/Model/room_price_computation.py) based the following parameters:
 
@@ -114,7 +113,7 @@ You can view SmartStay Analytics in [Option 3](https://github.com/im-ukr/SmartSt
 Export Full Analytics Report to PDF in [Option 4](https://github.com/im-ukr/SmartStay/blob/test/Model/report_export.py) and get the same mailed to the registered admin email id(s) in [email.csv](https://github.com/im-ukr/SmartStay/blob/test/Model/email.csv)
 
 ![Analytics-Report-1.jpg](https://github.com/im-ukr/SmartStay/blob/test/Model/assets/SmartStay-Analytics-Report_page1.jpg)
-
+Example content:
 ![Analytics-Report.jpg](https://github.com/im-ukr/SmartStay/blob/test/Model/assets/SmartStay-Analytics-Report%20(1).jpg)
 
 
