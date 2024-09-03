@@ -78,3 +78,4 @@ passw="password"
 - If occupancy is below 25%, prices decrease by 10%.
 - If occupancy is above 85%, prices increase by 15%.
 
+![parameters](https://github.com/im-ukr/SmartStay/blob/test/Model/assets/parameters.png)
