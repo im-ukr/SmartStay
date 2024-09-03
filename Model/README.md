@@ -1,4 +1,6 @@
- Modularized Final Model: [Model/final-model.ipynb](https://github.com/im-ukr/SmartStay/blob/test/Model/final-model.ipynb)
+# Follow these steps to run the Model code successfilly:
+ 
+Modularized Final Model: [Model/final-model.ipynb](https://github.com/im-ukr/SmartStay/blob/test/Model/final-model.ipynb)
 
 To run this code you'd need these 6 things set:
 
