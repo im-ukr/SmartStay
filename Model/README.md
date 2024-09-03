@@ -110,6 +110,6 @@ Export Full Analytics Report to PDF in [Option 4](https://github.com/im-ukr/Smar
 
 ![Analytics-Report-1.jpg](https://github.com/im-ukr/SmartStay/blob/test/Model/assets/SmartStay-Analytics-Report_page1.jpg)
 
-![Analytics-Report.png](https://github.com/im-ukr/SmartStay/blob/test/Model/assets/Analytics-page.png)
+![Analytics-Report.jpg](https://github.com/im-ukr/SmartStay/blob/test/Model/assets/SmartStay-Analytics-Report%20(1).jpg)
 
 
