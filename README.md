@@ -1,5 +1,5 @@
 # SmartStay - Hotel Rooms with Dynamic Pricing Strategies
-The Final Pricing Model can be found at [Model/final-model.ipynb](https://github.com/im-ukr/SmartStay/blob/test/Model/final-model.ipynb)
+The Final Pricing Model can be found at [Model/final-model.ipynb](https://github.com/im-ukr/SmartStay/blob/test/Model/final-model.ipynb)<br>
 You can read about the documentation of the same [here](https://github.com/im-ukr/SmartStay/blob/test/Model/README.md)
 
 ## Installation 
