@@ -34,11 +34,13 @@ passw="password"
 
 # Pricing Adjustments Overview
 
+Room price is computed in [Option 1](https://github.com/im-ukr/SmartStay/blob/test/Model/room_price_computation.py) based the following parameters:
+
 ## 1. Room Type Adjustment
 **Description:** The base pricing structure varies by room type, which is classified as either 'Deluxe' or 'Normal'.  
 **Adjustment:** 
-- For `room_type == 'D'`, the price is increased by ₹1000.
-- For `room_type == 'N'`, the price is increased by ₹500.
+- For `room_type == 'D'`, the price is increased by 20%. 
+- For `room_type == 'N'`, the price is increased by 10%.
 
 ## 2. Weekend Surge Charge
 **Description:** Prices are subject to an increase if the reservation check-in falls on a weekend (Saturday or Sunday).  
