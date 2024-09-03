@@ -31,3 +31,50 @@ passw="password"
 5. Any other file present in this directory.
 
 6. You should have all the requirements installed as mentioned in [notebooks/Dynamic Pricing Model/Final-model.ipynb](https://github.com/im-ukr/SmartStay/blob/test/notebooks/Dynamic%20Pricing%20Model/Final-model.ipynb). **This directory contains the modularized final model of the same file.**
+
+# Pricing Adjustments Overview
+
+## 1. Room Type Adjustment
+**Description:** The base pricing structure varies by room type, which is classified as either 'Deluxe' or 'Normal'.  
+**Adjustment:** 
+- For `room_type == 'D'`, the price is increased by ₹1000.
+- For `room_type == 'N'`, the price is increased by ₹500.
+
+## 2. Weekend Surge Charge
+**Description:** Prices are subject to an increase if the reservation check-in falls on a weekend (Saturday or Sunday).  
+**Adjustment:** The price is increased by 5% if the check-in date is on a weekend.
+
+## 3. Summer Season Adjustment
+**Description:** Increased demand during the summer season (March and April) results in higher prices.  
+**Adjustment:** The price is increased by 15% if the check-in date falls within March or April.
+
+## 4. Festive Period Amendments
+**Description:** Prices are adjusted during high-demand periods such as festivals and holidays.  
+**Adjustment:** A linear interpolation method is employed to adjust prices within a specified range (e.g., 20% to 30% increase) based on the proximity of the booking to the start or end of the festive period.
+
+## 5. Early Bird Discount(Smart Booking Optimization)
+**Description:** Discounts are available for bookings made well in advance.  
+**Adjustment:** A 10% to 15% discount is applied if the reservation is made at least 90 days prior to the check-in date.
+
+## 6. Late Minute Price Surge(Smart Booking Optimization)
+**Description:** Prices are increased for last-minute bookings.  
+**Adjustment:** A 10% to 20% price increase is applied if the reservation is made less than 3 days before the check-in date.
+
+## 7. CLV-oriented Discount
+**Description:** Guests enrolled in a loyalty program receive discounts.  
+**Adjustment:** A 20% discount is applied if the guest is a loyalty program member.
+
+## 8. Special Offer Period
+**Description:** Discounts are available during specific promotional periods.  
+**Adjustment:** A 7% discount is applied if the reservation falls within a designated special offer period.
+
+## 9. Holiday Discounts
+**Description:** Additional discounts are offered during specific holiday periods.  
+**Adjustment:** The price is reduced by 15% to 25%, depending on the proximity of the booking to the start or end of the holiday period.
+
+## 10. Peak-Load Pricing
+**Description:** Prices are adjusted based on the hotel's overall occupancy rate.  
+**Adjustment:** 
+- If occupancy is below 25%, prices decrease by 10%.
+- If occupancy is above 85%, prices increase by 15%.
+
