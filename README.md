@@ -1,4 +1,4 @@
-# SmartStay - Hotel Rooms with Dynamic Pricing System
+# SmartStay - Hotel Rooms with Dynamic Pricing Strategies
 The Final Pricing Model can be found at [Model/final-model.ipynb](https://github.com/im-ukr/SmartStay/blob/test/Model/final-model.ipynb)
 
 ## Installation 
@@ -74,6 +74,6 @@ Run `main.py` file with python 3 and you should see the login window, if you hav
 
 The default username and password are `username` and `password` respectively.
 
-### 8: Start Dynamic Pricing System
+### 8: Start the Dynamic Pricing Model
 
 Follow the steps as mentioned in [Model/README.md](https://github.com/im-ukr/SmartStay/tree/test/Model#readme) to set it up. The Price in the app updates on refresh to match the prices computed by this System.
