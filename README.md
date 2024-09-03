@@ -1,4 +1,4 @@
-# Dynamic Pricing System
+# SmartStay - Hotel Rooms with Dynamic Pricing System
 The Final Pricing Model can be found at [Model/final-model.ipynb](https://github.com/im-ukr/SmartStay/blob/test/Model/final-model.ipynb)
 
 ## Installation 
@@ -73,3 +73,7 @@ In order to make the app's gui look good, you will have to install the Montserra
 Run `main.py` file with python 3 and you should see the login window, if you have followed each step correctly.
 
 The default username and password are `username` and `password` respectively.
+
+### 8: Start Dynamic Pricing System
+
+Follow the steps as mentioned in [Model/README.md](https://github.com/im-ukr/SmartStay/tree/test/Model#readme) to set up it up. The Price in the app updates on clicking refresh to match the prices computed by this System.
