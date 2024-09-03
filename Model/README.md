@@ -1,3 +1,7 @@
+This file is divided in two parts:<br>
+A. Instructions to set up the Model.<br>
+B. Documentation
+
 # Follow these steps to run the Model code successfully:
  
 Modularized Final Model: [Model/final-model.ipynb](https://github.com/im-ukr/SmartStay/blob/test/Model/final-model.ipynb)
