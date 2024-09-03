@@ -87,3 +87,20 @@ Room price is computed in [Option 1](https://github.com/im-ukr/SmartStay/blob/te
 Final Receipt is displayed in [Option 2](https://github.com/im-ukr/SmartStay/blob/test/Model/fetch_reservation_and_calculate.py) depending on the duration of stay.
 
 ![Final Receipt.jpg](https://github.com/im-ukr/SmartStay/blob/test/Model/assets/Booking_Receipt_2_page-0001.jpg)
+
+# View Analytics
+
+You can view SmartStay Analytics in [Option 3](https://github.com/im-ukr/SmartStay/blob/test/Model/view_analytics.py) for the following currently:
+
+- Room Vacancy Status
+- Current Bookings by Room Type
+- Booking Trends by Day of Week
+- Reservation Trends
+- Average Stay Duration by Room Type
+- Room Price Distribution
+- Average Revenue by Room Type
+- Guest Origin by City
+- Violin Plot for Price Distribution by Room Type
+- Room Utilization Treemap
+- Revenue by Quarter
+
