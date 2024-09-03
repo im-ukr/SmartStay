@@ -76,4 +76,4 @@ The default username and password are `username` and `password` respectively.
 
 ### 8: Start Dynamic Pricing System
 
-Follow the steps as mentioned in [Model/README.md](https://github.com/im-ukr/SmartStay/tree/test/Model#readme) to set up it up. The Price in the app updates on clicking refresh to match the prices computed by this System.
+Follow the steps as mentioned in [Model/README.md](https://github.com/im-ukr/SmartStay/tree/test/Model#readme) to set it up. The Price in the app updates on refresh to match the prices computed by this System.
