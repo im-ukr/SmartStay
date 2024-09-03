@@ -86,4 +86,4 @@ Room price is computed in [Option 1](https://github.com/im-ukr/SmartStay/blob/te
 
 Final Receipt is displayed in [Option 2](https://github.com/im-ukr/SmartStay/blob/test/Model/fetch_reservation_and_calculate.py) depending on the duration of stay.
 
-[Final Receipt.png](https://github.com/im-ukr/SmartStay/blob/test/Model/assets/Final%20Receipt.png)
+![Final Receipt.png](https://github.com/im-ukr/SmartStay/blob/test/Model/assets/Final%20Receipt.png)
