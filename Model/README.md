@@ -104,3 +104,8 @@ You can view SmartStay Analytics in [Option 3](https://github.com/im-ukr/SmartSt
 - Room Utilization Treemap
 - Revenue by Quarter
 
+# Export Full Report to PDF and receive via mail
+
+Export Full Analytics Report to PDF and mail the same to the registered admin email id(s).
+
+![Analytics-Report-1.jpg](https://github.com/im-ukr/SmartStay/blob/test/Model/assets/SmartStay-Analytics-Report_page1.jpg)
