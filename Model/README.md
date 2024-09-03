@@ -32,7 +32,7 @@ passw="password"
 
 6. You should have all the requirements installed as mentioned in [notebooks/Dynamic Pricing Model/Final-model.ipynb](https://github.com/im-ukr/SmartStay/blob/test/notebooks/Dynamic%20Pricing%20Model/Final-model.ipynb). **This directory contains the modularized final model of the same file.**
 
-# Pricing Adjustments Overview
+# Section 1 - Pricing Adjustments Overview
 
 Room price is computed in [Option 1](https://github.com/im-ukr/SmartStay/blob/test/Model/room_price_computation.py) based the following parameters:
 
@@ -82,13 +82,13 @@ Room price is computed in [Option 1](https://github.com/im-ukr/SmartStay/blob/te
 
 ![parameters.png](https://github.com/im-ukr/SmartStay/blob/test/Model/assets/parameters.png)
 
-# Final Receipt Generation 
+# Section 2 - Final Receipt Generation 
 
 Final Receipt is displayed in [Option 2](https://github.com/im-ukr/SmartStay/blob/test/Model/fetch_reservation_and_calculate.py) depending on the duration of stay.
 
 ![Final Receipt.jpg](https://github.com/im-ukr/SmartStay/blob/test/Model/assets/Booking_Receipt_2_page-0001.jpg)
 
-# View Analytics
+# Section 3 - View Analytics
 
 You can view SmartStay Analytics in [Option 3](https://github.com/im-ukr/SmartStay/blob/test/Model/view_analytics.py) for the following currently:
 
@@ -104,7 +104,7 @@ You can view SmartStay Analytics in [Option 3](https://github.com/im-ukr/SmartSt
 - Room Utilization Treemap
 - Revenue by Quarter
 
-# Export Full Report to PDF and receive via mail
+# Section 4 - Export Full Report to PDF and receive via mail
 
 Export Full Analytics Report to PDF in [Option 4](https://github.com/im-ukr/SmartStay/blob/test/Model/report_export.py) and get the same mailed to the registered admin email id(s) in [email.csv](https://github.com/im-ukr/SmartStay/blob/test/Model/email.csv)
 
