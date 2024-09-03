@@ -3,7 +3,7 @@
 To run this code you'd need these 6 things set:
 
 1. Environment Variables File (.env):
-This file should contain your Google API key. Generate your api key from https://aistudio.google.com/app/apikey
+This file should contain your Google API key. This is used to generate description for the plots in the Analytics Report. Generate your api key from https://aistudio.google.com/app/apikey
 Content of .env file:
 ```sh
 GOOGLE_API_KEY="your_google_api_key_here"
