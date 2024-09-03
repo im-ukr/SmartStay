@@ -34,7 +34,7 @@ passw="password"
 
 # Section 1 - Pricing Adjustments Overview
 
-Room price is computed in [Option 1](https://github.com/im-ukr/SmartStay/blob/test/Model/room_price_computation.py) based the following parameters:
+Room price is computed for new bookings in [Option 1](https://github.com/im-ukr/SmartStay/blob/test/Model/room_price_computation.py) based the following parameters:
 
 ## 1. Room Type Adjustment
 **Description:** The base pricing structure varies by room type, which is classified as either 'Deluxe' or 'Normal'.  
@@ -84,7 +84,7 @@ Room price is computed in [Option 1](https://github.com/im-ukr/SmartStay/blob/te
 
 # Section 2 - Final Receipt Generation 
 
-Final Receipt is displayed in [Option 2](https://github.com/im-ukr/SmartStay/blob/test/Model/fetch_reservation_and_calculate.py) depending on the duration of stay.
+Final Receipt is generated in [Option 2](https://github.com/im-ukr/SmartStay/blob/test/Model/fetch_reservation_and_calculate.py) depending on the duration of stay once the guest checks-out.
 
 ![Final Receipt.jpg](https://github.com/im-ukr/SmartStay/blob/test/Model/assets/Booking_Receipt_2_page-0001.jpg)
 
