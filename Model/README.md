@@ -10,11 +10,11 @@ To run this code you'd need these 6 things set:
 
 1. Environment Variables File (.env):
 This file should contain your Google API key. This is used to generate description for the plots in the Analytics Report. Generate your api key from https://aistudio.google.com/app/apikey
-Content of .env file:
+The content of .env file that should be created by you within this directory is provided below:
 ```sh
 GOOGLE_API_KEY="your_google_api_key_here"
 ```
-2. Database and Email credentials(db_config.py) with the following content:
+2. Create a Database and Email credentials(db_config.py) file in this directory with the following content:
 ```sh
 # db_config.py
 username = 'your-username'
