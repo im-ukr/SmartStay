@@ -892,7 +892,7 @@ def report_export():
 
     # adding 1st page data image
     pdf.set_xy(80, 70)  
-    pdf.image("Data-logo.png", w=50)  
+    pdf.image("report_assets/Data-logo.png", w=50)  
 
     pdf.ln(10) 
 
@@ -922,13 +922,13 @@ def report_export():
     pdf.ln(2)  
 
     # Position to add signature image
-    #pdf.set_xy(160, 250)  
-    #pdf.image("sign-ukr.png", w=30) 
+    pdf.set_xy(160, 250)  
+    pdf.image("report_assets/sign-ukr.png", w=30) 
 
     # Text below the signature
-    #pdf.set_xy(160, 265)  
-    #pdf.set_font("Arial", '', 12)
-    #pdf.cell(0, 10, "Utkarsh Roy - SmartStay", 0, 1, 'C')
+    pdf.set_xy(160, 265)  
+    pdf.set_font("Arial", '', 12)
+    pdf.cell(0, 10, "Utkarsh Roy - SmartStay", 0, 1, 'C')
 
     image_files = [
     "vacancy_status.png",
@@ -957,7 +957,7 @@ def report_export():
     # EmaiL Part:
     # Reading email addresses from CSV file -- create a file email.csv
     email_list = []
-    with open('email.csv', newline='') as csvfile:
+    with open('report_assets/email.csv', newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             email_list.append(row['email'])
