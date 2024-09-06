@@ -443,6 +443,13 @@ def room_price_computation():
             table.max_width["Field"] = max(len(row[0]) for row in data) + 5  # +5 for padding
             table.max_width["Data"] = max(len(str(row[1])) for row in data) + 5  # +5 for padding
 
+            # Directory for saving receipts
+            receipts_folder = 'receipts'
+
+            # Create the directory if it doesn't exist
+            if not os.path.exists(receipts_folder):
+                os.makedirs(receipts_folder)
+
             # Create the PDF
             pdf = PDF()
             pdf.add_page()
@@ -498,18 +505,18 @@ def room_price_computation():
                 "Sincerely,\nSmartStay Team"
             )
 
-            # Save the PDF
-            pdf_file_name = f"Booking_Info_{guest_id}.pdf"
-            pdf.output(pdf_file_name)
-
-            print(f"PDF saved as {pdf_file_name}")
+            # Define the path with the folder and filename
+            filename = os.path.join(receipts_folder, f"Booking_info_{guest.id}.pdf")
+            pdf.output(filename)
+    
+            print(f"PDF receipt saved as {filename}")
         
             # Send the PDF via email
             try:
                 yag = yagmail.SMTP(db_config.email, db_config.passw)
                 subject = "Your Booking Information"
                 body = "Dear Guest,\n\nPlease find attached your booking information.\n\nBest Regards,\nSmartStay Team"
-                yag.send(to=guest.email_id, subject=subject, contents=body, attachments=pdf_file_name)
+                yag.send(to=guest.email_id, subject=subject, contents=body, attachments=filename)
                 print(f"\033[1mBooking info sucessfully mailed to {guest.email_id}!\033[0m")
             except Exception as e:
                 print(f"Failed to send email: {e}")
