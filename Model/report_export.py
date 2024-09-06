@@ -922,8 +922,8 @@ def report_export():
     pdf.ln(2)  
 
     # Position to add signature image
-    pdf.set_xy(160, 250)  
-    pdf.image("report_assets/sign-ukr.png", w=30) 
+    # pdf.set_xy(160, 250)  
+    # pdf.image("report_assets/sign-ukr.png", w=30) 
 
     # Text below the signature
     pdf.set_xy(160, 265)  
