@@ -37,6 +37,7 @@ from IPython.display import display, clear_output
 from dotenv import load_dotenv 
 import google.generativeai as genai
 import db_config
+from preprocess_clv_data import process_clv_data
 
 
 # Configure generative AI API key
@@ -194,6 +195,15 @@ def fetch_reservation_and_calculate(room_no, session):
     print("\nReservation Details:")
     print(table)
 
+    # Directory for saving CSV files
+    csv_folder = 'csv_files'
+
+    # Create the directory if it doesn't exist
+    if not os.path.exists(csv_folder):
+        os.makedirs(csv_folder)
+
+    # Define the path for the CSV file
+    csv_filename = os.path.join(csv_folder, 'final-rectfied-clv-data.csv')
     # Adding above data to CLV Table
     clv = CLV(
     guest_id=reservation.g_id,
@@ -214,38 +224,67 @@ def fetch_reservation_and_calculate(room_no, session):
     session.add(clv)
     session.commit()
 
-    # Fetch all records from the CLV table
-    clv_data = session.query(CLV).all()
+    # Define the starting ID
+    starting_id = 109
 
-    # Convert the data into a list of dictionaries
-    clv_list = [
-    {
-        'id': record.id,
-        'guest_id': record.guest_id,
-        'guest_name': record.guest_name,
-        'email_id': record.email_id,
-        'check_in_date': record.check_in_date,
-        'check_out_date': record.check_out_date,
-        'room_number': record.room_number,
-        'room_type': record.room_type,
-        'room_price_per_day': record.room_price_per_day,
-        'duration_of_stay': record.duration_of_stay,
-        'meal_charges': record.meal_charges,
-        'discount': record.discount,
-        'gst': record.gst,
-        'grand_total_amount': record.grand_total_amount,
-        'created_at': record.created_at
-    }
-        for record in clv_data
-    ]
+   # Check if the file exists and get the next ID
+    file_exists = os.path.isfile(csv_filename)
 
-    df_clv = pd.DataFrame(clv_list)
+    if file_exists:
+        # Read the existing CSV file
+        with open(csv_filename, 'r') as csvfile:
+            reader = csv.DictReader(csvfile)
+            existing_ids = [int(row['id']) for row in reader if row['id'].isdigit()]
+            # Find the highest ID from the existing file
+            last_id = max(existing_ids, default=starting_id - 1)
+    else:
+        # If the file doesn't exist, start from the initial ID
+        last_id = starting_id - 1
 
-    # Save the DataFrame to a CSV file.
-    csv_filename = 'clv_data.csv'
-    df_clv.to_csv(csv_filename, index=False)
+    # Determine the new ID
+    new_id = last_id + 1
 
-    print(f"CLV data saved as {csv_filename}")
+    # Convert the latest CLV record to a dictionary with the new ID
+    latest_clv_data = {
+    'id': new_id,
+    'guest_id': clv.guest_id,
+    'guest_name': clv.guest_name,
+    'email_id': clv.email_id,
+    'check_in_date': clv.check_in_date,
+    'check_out_date': clv.check_out_date,
+    'room_number': clv.room_number,
+    'room_type': clv.room_type,
+    'room_price_per_day': clv.room_price_per_day,
+    'duration_of_stay': clv.duration_of_stay,
+    'meal_charges': clv.meal_charges,
+    'discount': clv.discount,
+    'gst': clv.gst,
+    'grand_total_amount': clv.grand_total_amount,
+    'created_at': clv.created_at
+}
+
+    # Append the latest record to the CSV file
+    with open(csv_filename, 'a', newline='') as csvfile:
+        fieldnames = latest_clv_data.keys()
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+        # If the file doesn't exist, write the header first
+        if not file_exists:
+            writer.writeheader()
+
+        # Write the latest record
+        writer.writerow(latest_clv_data)
+
+    print(f"New CLV record appended to {csv_filename} with ID {new_id}")
+
+    process_clv_data()    # Call the function bro
+
+    # Directory for saving receipts
+    receipts_folder = 'receipts'
+
+    # Create the directory if it doesn't exist
+    if not os.path.exists(receipts_folder):
+        os.makedirs(receipts_folder)
 
     # Generate PDF
     pdf = FPDF()
@@ -328,8 +367,9 @@ def fetch_reservation_and_calculate(room_no, session):
     #pdf.set_font("Arial", 'I', 10)
     pdf.set_font("Arial",'I', 10)
     pdf.cell(200, 10, txt=f"Time Generated At: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", ln=True)
-    
-    filename = f"Booking_Receipt_{reservation.guest.id}.pdf"
+
+    # Define the path with the folder and filename
+    filename = os.path.join(receipts_folder, f"Booking_Receipt_{reservation.guest.id}.pdf")
     pdf.output(filename)
     
     print(f"PDF receipt saved as {filename}")
