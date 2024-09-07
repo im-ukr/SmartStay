@@ -1,13 +1,14 @@
-guest_id,guest_name,email_id,frequency_of_bookings,days_since_last_booking,total_revenue_generated,average_stay_duration,total_meal_charges
-2,Utkarsh Roy,utkarsh.roy25@gmail.com,2,18,72251.93000000001,5.0,1401.84
-5,Kanak Pandit,kanakpandit17@gmail.com,3,15,238854.41,11.666666666666666,24532.2
-941,David M.,david79@gmail.com,7,219,817388.25,12.571428571428571,13660.0
-363,Amit K.,amit43@gmail.com,7,52,1226078.7,19.142857142857142,16741.0
-183,Michael K.,michael94@gmail.com,11,390,979570.2000000001,11.818181818181818,21305.0
-119,Rahul D.,rahul51@gmail.com,12,119,1265995.5,14.0,23224.0
-265,Sunita R.,sunita32@gmail.com,13,39,1623914.25,15.692307692307692,26657.0
-267,Priya S.,priya52@gmail.com,17,560,2560051.2,18.88235294117647,45008.0
-628,John D.,john54@gmail.com,4,120,248029.94999999998,7.0,4362.0
-914,Emily B.,emily30@gmail.com,16,3,1743385.1,13.5,33403.0
-106,Sophia L.,sophia94@gmail.com,4,95,697507.65,21.5,8435.0
-899,Vikas P.,vikas91@gmail.com,9,39,1258101.6,16.555555555555557,18999.0
+guest_id,guest_name,email_id,frequency_of_bookings,days_since_last_booking,average_stay_duration,total_meal_charges,total_revenue_generated
+2,Utkarsh Roy,utkarsh.roy25@gmail.com,2,18,5.0,1401.84,72251.93
+5,Kanak Pandit,kanakpandit17@gmail.com,1,26,11.0,7710.12,75068.53
+941,David M.,david79@gmail.com,7,219,12.57,13660.0,817388.25
+363,Amit K.,amit43@gmail.com,7,52,19.14,16741.0,1226078.7
+183,Michael K.,michael94@gmail.com,11,390,11.82,21305.0,979570.2
+119,Rahul D.,rahul51@gmail.com,12,119,14.0,23224.0,1265995.5
+265,Sunita R.,sunita32@gmail.com,13,39,15.69,26657.0,1623914.25
+267,Priya S.,priya52@gmail.com,17,560,18.88,45008.0,2560051.2
+628,John D.,john54@gmail.com,4,120,7.0,4362.0,248029.95
+914,Emily B.,emily30@gmail.com,16,3,13.5,33403.0,1743385.1
+106,Sophia L.,sophia94@gmail.com,4,95,21.5,8435.0,697507.65
+899,Vikas P.,vikas91@gmail.com,9,39,16.56,18999.0,1258101.6
+14,Isha Nair,isha.nair@gmail.com,1,236,6.0,0.0,37170.0
