@@ -38,10 +38,15 @@ def process_clv_data():
     # Step 5: Calculate total amount spent on meals by each guest
     df1['total_meal_charges'] = df1.groupby('guest_id')['meal_charges'].transform('sum')
 
+    # Step 6: Round values to 2 decimal places for the following
+    df1['total_revenue_generated'] = df1['total_revenue_generated'].round(2)
+    df1['average_stay_duration'] = df1['average_stay_duration'].round(2)
+    df1['total_meal_charges'] = df1['total_meal_charges'].round(2)
+
     # Updated dataframe
     result_df = df1[['guest_id', 'guest_name', 'email_id', 'frequency_of_bookings', 
-                     'days_since_last_booking', 'total_revenue_generated', 
-                     'average_stay_duration', 'total_meal_charges']].drop_duplicates().reset_index(drop=True)
+                     'days_since_last_booking', 
+                     'average_stay_duration', 'total_meal_charges','total_revenue_generated']].drop_duplicates().reset_index(drop=True)
 
     # Save the modified dataframe to csv_files directory
     result_df.to_csv(os.path.join(csv_folder, 'condensed-clv-data.csv'), index=False)
