@@ -29,7 +29,7 @@ def view_Analytics():
     import csv
     import warnings
     warnings.filterwarnings("ignore", category=FutureWarning)
-    from geopy.geocoders import Nominatim  # To convert city names to coordinates
+    from geopy.geocoders import Nominatim  
     from prettytable import PrettyTable 
     from io import StringIO
     from IPython.display import display, clear_output 
@@ -37,26 +37,20 @@ def view_Analytics():
     import google.generativeai as genai
     import db_config
 
-    # Configure generative AI API key
     genai.configure(api_key=os.environ['GOOGLE_API_KEY'])
 
-    # Load environment variables
     load_dotenv()
 
-    # Database connection parameters from db_config
     username = db_config.username
     password = db_config.password
     host = db_config.host
     port = db_config.port
     database = db_config.database
 
-    # Create an engine instance with provided credentials
     engine = create_engine(f'mysql+pymysql://{username}:{password}@{host}:{port}/{database}')
 
-    # Define the ORM base class
     Base = declarative_base()
 
-    # Define the ORM mapping for the rooms table
     class Room(Base):
         __tablename__ = 'rooms'
         id = Column(Integer, primary_key=True, autoincrement=True)
@@ -68,7 +62,6 @@ def view_Analytics():
 
         reservations = relationship("Reservation", back_populates="room")
 
-    # Define the ORM mapping for the reservations table
     class Reservation(Base):
         __tablename__ = 'reservations'
         id = Column(Integer, primary_key=True, autoincrement=True)
@@ -84,7 +77,6 @@ def view_Analytics():
         guest = relationship("Guest", back_populates="reservations")
         room = relationship("Room", back_populates="reservations")
 
-    # Define the ORM mapping for the guests table
     class Guest(Base):
         __tablename__ = 'guests'
         id = Column(Integer, primary_key=True, autoincrement=True)
@@ -97,7 +89,6 @@ def view_Analytics():
 
         reservations = relationship("Reservation", back_populates="guest")
 
-    # Define the ORM mapping for the loyalty table
     class Loyalty(Base):
         __tablename__ = 'loyalty'
         id = Column(Integer, primary_key=True, autoincrement=True)
@@ -108,21 +99,17 @@ def view_Analytics():
     Session = sessionmaker(bind=engine)
     session = Session()
 
-    # Function to get the total number of rooms
     def get_total_rooms():
         total_rooms = session.query(func.count(Room.id)).scalar()
         return total_rooms
 
-    # Function to get the number of booked rooms
     def booked():
         booked_rooms = session.query(func.count(Reservation.id)).filter(Reservation.check_out == None).scalar()
         return booked_rooms
 
-    # Function to get the number of vacant rooms
     def vacant():
         return get_total_rooms() - booked()
 
-    # Function to get booking counts by room typ
     def bookings():
         deluxe_count = session.query(func.count(Reservation.id)).\
         join(Room, Reservation.r_id == Room.id).\
@@ -134,7 +121,6 @@ def view_Analytics():
 
         return [deluxe_count, normal_count]
 
-    # Plotting Vacancy Status using Plotly
     def plot_vacancy_status():
         total = get_total_rooms()
         booked_count = booked()
@@ -147,8 +133,7 @@ def view_Analytics():
         fig.update_traces(hoverinfo='label+percent', textinfo='value', marker=dict(colors=['red', 'green']))
         fig.update_layout(title_text='Room Vacancy Status')
         fig.show()
-
-    # Plot Current Bookings by Room Type                                
+                               
     def plot_bookings_by_room_type():
         booking_counts = bookings()
         room_types = ['Deluxe', 'Normal']
@@ -157,7 +142,6 @@ def view_Analytics():
         fig.update_layout(title='Current Bookings by Room Type', xaxis_title='Room Type', yaxis_title='Number of Bookings')
         fig.show()
 
-    # Plot Booking Trends by Day of Week 
     def plot_booking_trends_by_day_of_week():
         check_in_dates = session.query(Reservation.check_in).all()
         df_check_in = pd.DataFrame(check_in_dates, columns=['check_in'])
@@ -188,40 +172,22 @@ def view_Analytics():
 
         fig.show()
 
-    # Plot number of reservations in each month
     def plot_reservation_trends():
-        # Query to get reservation trends --how many reservations in each month
         reservation_trends = (
         session.query(func.year(Reservation.check_in), func.month(Reservation.check_in), func.count(Reservation.id))
         .group_by(func.year(Reservation.check_in), func.month(Reservation.check_in))
         .order_by(func.year(Reservation.check_in), func.month(Reservation.check_in))
         .all()
         )
-
-        # Convert the query result to a DataFrame
         df_trends = pd.DataFrame(reservation_trends, columns=['Year', 'Month', 'Count'])
-
-        # Convert Year and Month to datetime using pd.to_datetime
         df_trends['Date'] = pd.to_datetime(df_trends[['Year', 'Month']].assign(DAY=1))
-
-        # Create a complete date range for the last 12 months
         date_range = pd.date_range(end=df_trends['Date'].max(), periods=12, freq='MS')
-
-        # Merge with the original dataframe to include missing months
         df_complete = pd.DataFrame(date_range, columns=['Date']).merge(df_trends, on='Date', how='left')
-
-        # Fill missing reservation counts with 0
         df_complete['Count'].fillna(0, inplace=True)
-
-        # Use np.array to handle the datetime values
         x_values = np.array(df_complete['Date'])
         y_values = np.array(df_complete['Count'])
-
         fig = go.Figure()
-
         fig.add_trace(go.Scatter(x=x_values, y=y_values, mode='lines+markers', name='Reservations'))
-
-        # Update layout with tick mode and interval to display all months
         fig.update_layout(
         title='Reservation Trends This Year',
         xaxis_title='Month',
@@ -229,20 +195,19 @@ def view_Analytics():
         xaxis_tickformat='%b %Y',
         xaxis=dict(
             tickmode='linear',  
-            tick0=x_values[0],  # Start tick at the first date
-            dtick='M1'          # Set tick interval to 1 month
+            tick0=x_values[0],  
+            dtick='M1'          
         ),
         showlegend=False
         )
 
         fig.show()
 
-    # Plot average stay duration for both room types
     def plot_avg_stay_duration_by_room_type():
         stay_duration = (
         session.query(Room.room_type, func.round(func.avg(func.datediff(Reservation.check_out, Reservation.check_in)), 2))
         .join(Room, Reservation.r_id == Room.id)
-        .filter(Reservation.check_out != None)  # Exclude records where check_out is NULL
+        .filter(Reservation.check_out != None)  
         .group_by(Room.room_type)
         .all()
     )
@@ -253,9 +218,7 @@ def view_Analytics():
         fig.update_layout(xaxis_title='Room Type', yaxis_title='Average Stay Duration (days)')
         fig.show()
 
-    #Plot number of rooms in each price segment
     def plot_room_price_distribution():
-        # Query to get the price of each room
         room_prices = session.query(Room.price).all()
 
         df_prices = pd.DataFrame(room_prices, columns=['Price'])
@@ -265,7 +228,6 @@ def view_Analytics():
 
         df_prices['Price Range'] = pd.cut(df_prices['Price'], bins=bins, labels=labels, include_lowest=True)
 
-        # Count the number of rooms in each price range
         price_distribution = df_prices['Price Range'].value_counts().sort_index()
 
         fig = px.bar(
@@ -288,9 +250,7 @@ def view_Analytics():
 
         fig.show()
 
-    # Plot average revenue generated by each room type
     def plot_avg_revenue_by_room_type():
-        # Query to calculate average revenue by room type, considering only rooms in the reservations table
         avg_revenue_by_room_type = (
         session.query(Room.room_type, func.round(func.avg(Room.price), 2))
         .join(Reservation, Reservation.r_id == Room.id)
@@ -309,7 +269,6 @@ def view_Analytics():
     
         fig.show()
 
-    # Function to extract coordinates of a guest's city
     def get_city_coordinates(city_name):
         geolocator = Nominatim(user_agent="smartstay_app", timeout=10)
         location = geolocator.geocode(city_name)
@@ -318,9 +277,7 @@ def view_Analytics():
         else:
             return None, None
         
-    # Plot guest's city on the map with the help of geopy
     def plot_guest_origin_by_city():
-        # Query to find the number of guests from each city
         guest_origins = session.query(Guest.city, func.count(Guest.id)).group_by(Guest.city).all()
 
         df_guest_origins = pd.DataFrame(guest_origins, columns=['City', 'Guest Count'])
@@ -328,7 +285,6 @@ def view_Analytics():
         df_guest_origins['Latitude'] = df_guest_origins['City'].apply(lambda city: get_city_coordinates(city)[0])
         df_guest_origins['Longitude'] = df_guest_origins['City'].apply(lambda city: get_city_coordinates(city)[1])
 
-        # Drop any rows where coordinates could not be found
         df_guest_origins.dropna(subset=['Latitude', 'Longitude'], inplace=True)
 
         fig = px.scatter_geo(
@@ -347,9 +303,7 @@ def view_Analytics():
 
         fig.show()
 
-    # Violin plot for price distribution by room type
     def plot_violin_price_distribution_by_room_type():
-        # Query to get room prices along with room types
         room_data = session.query(Room.room_type, Room.price).all()
 
         df_rooms = pd.DataFrame(room_data, columns=['Room Type', 'Price'])
@@ -357,7 +311,7 @@ def view_Analytics():
         fig = px.violin(df_rooms, x='Room Type', y='Price', 
                     box=True,  
                     points='all',  
-                    hover_data=['Price'],  # Shows price on hover
+                    hover_data=['Price'],  
                     title='Violin Plot for Price Distribution by Room Type',
                     color='Room Type',  
                     labels={'Price': 'Room Price', 'Room Type': 'Room Type'})
@@ -366,9 +320,7 @@ def view_Analytics():
 
         fig.show()
 
-    # Plot room utilization tree map
     def plot_room_utilization_treemap():
-    # Calculate the duration in days for each reservation and total revenue for each room
         room_utilization = (
         session.query(
             Room.id,
@@ -379,7 +331,7 @@ def view_Analytics():
             ), 2).label('avg_revenue')
           )
         .join(Reservation, Reservation.r_id == Room.id)
-        .filter(Reservation.check_out != None)  # Ensure the room is checked-out
+        .filter(Reservation.check_out != None)  
         .group_by(Room.id)
         .all()
          )
@@ -391,19 +343,18 @@ def view_Analytics():
         axis=1
         )
 
-        # Create the treemap using Plotly Graph Objects
         fig = go.Figure(go.Treemap(
         labels=df_utilization['Room Number'],
-        parents=[''] * len(df_utilization),  # All rooms are top-level
+        parents=[''] * len(df_utilization), 
         values=df_utilization['Total Times Booked'],
         marker=dict(
             colors=df_utilization['Avg Revenue'],
             colorscale='Greens',
             colorbar_title='Avg Revenue'
         ),
-        textinfo='label',  # Only show label on each block
+        textinfo='label',  
         hovertext=hover_text, 
-        hoverinfo='text',  # Show hover text on hover
+        hoverinfo='text',  
         textfont=dict(size=20)
         ))
 
@@ -415,7 +366,6 @@ def view_Analytics():
 
         fig.show()
 
-    # Function to format larger values
     def format_revenue(value):
         if value >= 1_000_000_000:
             return f'{value / 1_000_000_000:.1f}B'
@@ -425,7 +375,6 @@ def view_Analytics():
             return f'{value / 1_000:.1f}K'
         return f'{value:.2f}'
 
-    # Plotting total revenue generated in each quarter.
     def plot_revenue_by_quarter():
         monthly_revenue = (
         session.query(
@@ -491,7 +440,6 @@ def view_Analytics():
         fig.show()
 
 
-    # Call the functions to plot the data
     plot_vacancy_status()
     plot_bookings_by_room_type()
     plot_revenue_by_quarter()
