@@ -29,7 +29,7 @@ def report_export():
     import csv
     import warnings
     warnings.filterwarnings("ignore", category=FutureWarning)
-    from geopy.geocoders import Nominatim  # To convert city names to coordinates
+    from geopy.geocoders import Nominatim  #
     from prettytable import PrettyTable 
     from io import StringIO
     from IPython.display import display, clear_output 
@@ -37,26 +37,20 @@ def report_export():
     import google.generativeai as genai
     import db_config
 
-    # Configure generative AI API key
     genai.configure(api_key=os.environ['GOOGLE_API_KEY'])
 
-    # Load environment variables
     load_dotenv()
 
-    # Database connection parameters from db_config
     username = db_config.username
     password = db_config.password
     host = db_config.host
     port = db_config.port
     database = db_config.database
 
-    # Create an engine instance with provided credentials
     engine = create_engine(f'mysql+pymysql://{username}:{password}@{host}:{port}/{database}')
 
-    # Define the ORM base class
     Base = declarative_base()
 
-    # Define the ORM mapping for the rooms table
     class Room(Base):
         __tablename__ = 'rooms'
         id = Column(Integer, primary_key=True, autoincrement=True)
@@ -68,7 +62,6 @@ def report_export():
 
         reservations = relationship("Reservation", back_populates="room")
 
-    # Define the ORM mapping for the reservations table
     class Reservation(Base):
         __tablename__ = 'reservations'
         id = Column(Integer, primary_key=True, autoincrement=True)
@@ -84,7 +77,6 @@ def report_export():
         guest = relationship("Guest", back_populates="reservations")
         room = relationship("Room", back_populates="reservations")
 
-    # Define the ORM mapping for the guests table
     class Guest(Base):
         __tablename__ = 'guests'
         id = Column(Integer, primary_key=True, autoincrement=True)
@@ -97,7 +89,6 @@ def report_export():
 
         reservations = relationship("Reservation", back_populates="guest")
 
-    # Define the ORM mapping for the loyalty table
     class Loyalty(Base):
         __tablename__ = 'loyalty'
         id = Column(Integer, primary_key=True, autoincrement=True)
@@ -108,12 +99,10 @@ def report_export():
     Session = sessionmaker(bind=engine)
     session = Session()
 
-    # Create the 'test_plots' directory if it doesn't exist
     output_dir = 'test_plots'
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    # Convert HTML to PNG
     def html_to_png(html_file, output_file):
         chrome_options = Options()
         chrome_options.add_argument("--headless")
@@ -123,26 +112,20 @@ def report_export():
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
         driver.get(f"file://{os.path.abspath(html_file)}")
 
-        # Capture screenshot
         driver.save_screenshot(os.path.join(output_dir, output_file))
         driver.quit()
 
-
-    # Function to get the total number of rooms
     def get_total_rooms():
         total_rooms = session.query(func.count(Room.id)).scalar()
         return total_rooms
 
-    # Function to get the number of booked rooms
     def booked():
         booked_rooms = session.query(func.count(Reservation.id)).filter(Reservation.check_out == None).scalar()
         return booked_rooms
 
-    # Function to get the number of vacant rooms
     def vacant():
         return get_total_rooms() - booked()
 
-    # Function to get booking counts by room type
     def bookings():
         deluxe_count = session.query(func.count(Reservation.id)).\
         join(Room, Reservation.r_id == Room.id).\
@@ -155,8 +138,6 @@ def report_export():
         return [deluxe_count, normal_count]
     
     # All plots :
-
-    # Plot vacancy status using plotly
     def plot_vacancy_status():
         total = get_total_rooms()
         booked_count = booked()
@@ -183,8 +164,6 @@ def report_export():
         description = response.text 
         description_with_line_breaks = '<br>-'.join(description.split('-'))
 
-
-        # Create the HTML content with the description
         html_content = f"""
         <!DOCTYPE html>
         <html lang="en">
@@ -203,7 +182,6 @@ def report_export():
         with open("vacancy_status.html", "w") as f:
             f.write(html_content)
 
-    # Plot number of bookings by room type
     def plot_bookings_by_room_type():
         booking_counts = bookings()
         room_types = ['Deluxe', 'Normal']
@@ -245,7 +223,6 @@ def report_export():
         with open("bookings_by_room_type.html", "w") as f:
             f.write(html_content)
     
-    # Plot number of bookings on each day of the week
     def plot_booking_trends_by_day_of_week():
         check_in_dates = session.query(Reservation.check_in).all()
         df_check_in = pd.DataFrame(check_in_dates, columns=['check_in'])
@@ -294,32 +271,19 @@ def report_export():
         with open("booking_trends_by_day_of_week.html", "w") as f:
             f.write(html_content)
 
-    # Plot Reservation Trends Over the Year 
     def plot_reservation_trends():
-        # Query to get reservation trends  -- getting number of reservations in each month
         reservation_trends = (
         session.query(func.year(Reservation.check_in), func.month(Reservation.check_in), func.count(Reservation.id))
         .group_by(func.year(Reservation.check_in), func.month(Reservation.check_in))
         .order_by(func.year(Reservation.check_in), func.month(Reservation.check_in))
         .all()
         )
-
-        # Convert the query result to a DataFrame
         df_trends = pd.DataFrame(reservation_trends, columns=['Year', 'Month', 'Count'])
-
-        # Convert Year and Month to datetime using pd.to_datetime
         df_trends['Date'] = pd.to_datetime(df_trends[['Year', 'Month']].assign(DAY=1))
-
-        # Create a complete date range for the last 12 months
         date_range = pd.date_range(end=df_trends['Date'].max(), periods=12, freq='MS')
-
-        # Merge with the original dataframe to include missing months
         df_complete = pd.DataFrame(date_range, columns=['Date']).merge(df_trends, on='Date', how='left')
-
-        # Fill missing reservation counts with 0
         df_complete['Count'].fillna(0, inplace=True)
 
-        # Use np.array to handle the datetime values
         x_values = np.array(df_complete['Date'])
         y_values = np.array(df_complete['Count'])
 
@@ -327,7 +291,6 @@ def report_export():
 
         fig.add_trace(go.Scatter(x=x_values, y=y_values, mode='lines+markers', name='Reservations'))
 
-        # Update layout with tick mode and interval to display all months
         fig.update_layout(
         title='Reservation Trends This Year',
         xaxis_title='Month',
@@ -335,14 +298,12 @@ def report_export():
         xaxis_tickformat='%b %Y',
         xaxis=dict(
             tickmode='linear',  
-            tick0=x_values[0],  # Start tick at the first date
-            dtick='M1'          # Set tick interval to 1 month
+            tick0=x_values[0],  
+            dtick='M1'         
         ),
         showlegend=False
         )
         fig.update_layout(width=620, height=350)
-
-        # Save the figure as an HTML file
         fig.write_html("reservation_trends.html")
         html_to_png("reservation_trends.html", "reservation_trends.png")
         sample_file_4 = PIL.Image.open('test_plots/reservation_trends.png')
@@ -376,8 +337,6 @@ def report_export():
         with open("reservation_trends.html", "w") as f:
             f.write(html_content)
 
-
-    # Plot Average stay duration of each room type
     def plot_avg_stay_duration_by_room_type():
         stay_duration = (
         session.query(Room.room_type, func.round(func.avg(func.datediff(Reservation.check_out, Reservation.check_in)), 2))
@@ -426,21 +385,13 @@ def report_export():
         with open("avg_stay_duration_by_room_type.html", "w") as f:
             f.write(html_content)
     
-    # Plot number of rooms in each price segment
     def plot_room_price_distribution():
-        # Query to get the price of each room
         room_prices = session.query(Room.price).all()
     
         df_prices = pd.DataFrame(room_prices, columns=['Price'])
-    
-        # Define price bins (adjust these ranges based on our data)
         bins = [4000, 5000, 6000, 7000, 8000, 9000, 10000]
         labels = ['4000-5000', '5000-6000', '6000-7000', '7000-8000', '8000-9000', '10000+']
-    
-        # Categorize the prices into the defined bins
         df_prices['Price Range'] = pd.cut(df_prices['Price'], bins=bins, labels=labels, include_lowest=True)
-    
-        # Count the number of rooms in each price range
         price_distribution = df_prices['Price Range'].value_counts().sort_index()
     
         fig = px.bar(price_distribution, x=price_distribution.index, y=price_distribution.values, 
@@ -483,11 +434,7 @@ def report_export():
         with open("room_price_distribution.html", "w") as f:
             f.write(html_content)
     
-
-
-    # Plotting room utilization tree map
     def plot_room_utilization_treemap():
-        # Calculate the duration in days for each reservation and total revenue for each room
         room_utilization = (
         session.query(
             Room.id,
@@ -498,7 +445,7 @@ def report_export():
             ), 2).label('avg_revenue')
           )
         .join(Reservation, Reservation.r_id == Room.id)
-        .filter(Reservation.check_out != None)  # Ensure the room is checked-out
+        .filter(Reservation.check_out != None)  
         .group_by(Room.id)
         .all()
         )
@@ -509,8 +456,6 @@ def report_export():
         lambda row: f"Room Number: {row['Room Number']}<br>Total Times Booked: {row['Total Times Booked']}<br>Average Revenue: {row['Avg Revenue']}",
         axis=1
         )
-
-        # Creating a Treemap
         fig = go.Figure(go.Treemap(
         labels=df_utilization['Room Number'],
         parents=[''] * len(df_utilization),  
@@ -562,12 +507,9 @@ def report_export():
         </body>
         </html>
         """
-
-        # Save the HTML content to a file
         with open("room_treemap.html", "w") as f:
             f.write(html_content)
 
-    # Function to format higher revenue values
     def format_revenue(value):
         if value >= 1_000_000_000:
             return f'{value / 1_000_000_000:.1f}B'
@@ -577,7 +519,6 @@ def report_export():
             return f'{value / 1_000:.1f}K'
         return f'{value:.2f}'
    
-    # Plot total revnue generated in each quarter 
     def plot_revenue_by_quarter():
         monthly_revenue = (
         session.query(
@@ -640,8 +581,6 @@ def report_export():
         coloraxis_showscale=True
         )
         fig.update_layout(width=600, height=350)
-
-        # Save the figure as an HTML file
         fig.write_html("revenue_by_quarter.html")
         html_to_png("revenue_by_quarter.html", "revenue_by_quarter.png")
         sample_file_8 = PIL.Image.open('test_plots/revenue_by_quarter.png')
@@ -673,10 +612,8 @@ def report_export():
 
         with open("revenue_by_quarter.html", "w") as f:
             f.write(html_content)
-    
-    # Violin plot for room price distribution
+
     def plot_violin_price_distribution_by_room_type():
-        # Query to get room prices along with room types
         room_data = session.query(Room.room_type, Room.price).all()
 
         df_rooms = pd.DataFrame(room_data, columns=['Room Type', 'Price'])
@@ -724,9 +661,7 @@ def report_export():
         with open("violin_plot.html", "w") as f:
             f.write(html_content)
 
-    # Plot average revenue generated by each room type
     def plot_avg_revenue_by_room_type():
-        # Query to calculate average revenue by room type, considering only rooms in the reservations table
         avg_revenue_by_room_type = (
         session.query(Room.room_type, func.round(func.avg(Room.price), 2))
         .join(Reservation, Reservation.r_id == Room.id)
@@ -778,7 +713,6 @@ def report_export():
         with open("avg_revenue.html", "w") as f:
             f.write(html_content)
 
-    # Call the functions to plot the data and save as HTML files
     print("Analyzing data...")
     plot_vacancy_status()
     plot_bookings_by_room_type()
@@ -792,12 +726,10 @@ def report_export():
     plot_room_price_distribution()
 
 
-    # Create the 'test_plots' directory if it doesn't exist
     output_dir = 'test_plots'
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    # Convert HTML to PNG
     def html_to_png(html_file, output_file):
         chrome_options = Options()
         chrome_options.add_argument("--headless")
@@ -808,11 +740,9 @@ def report_export():
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
         driver.get(f"file://{os.path.abspath(html_file)}")
 
-        # Capture screenshot
         driver.save_screenshot(os.path.join(output_dir, output_file))
         driver.quit()
 
-    # Convert each HTML file to PNG
     print("Done! Exporting to PDF. This might take a couple of minutes. Please wait..")
     html_to_png("vacancy_status.html", "vacancy_status.png")
     html_to_png("bookings_by_room_type.html", "bookings_by_room_type.png")
@@ -835,11 +765,8 @@ def report_export():
             self.set_y(-26)
             self.set_text_color(0, 0, 0)
             self.set_font('Arial', 'I', 11)
-            self.cell(0, 10, '', 0, 1, 'C')  # This will create a line break
-            # Page number
+            self.cell(0, 10, '', 0, 1, 'C')  
             self.cell(0, 10, f'Page {self.page_no()}', 0, 0, 'C')
-        
-            # Get current timestamp
             current_time = time.strftime('%Y-%m-%d %H:%M:%S')
         
             self.set_xy(self.l_margin, -15)  
@@ -848,13 +775,12 @@ def report_export():
 
         def table_of_contents(self, titles, start_page):
             self.set_font("Arial", '', 12)
-            content_column_width = 120  # Wider column for content names
-            page_number_column_width = 40  # Narrower column for page numbers
+            content_column_width = 120  
+            page_number_column_width = 40  
 
-            # Calculate total table width
             table_width = content_column_width + page_number_column_width
         
-            page_width = self.w - 2 * self.l_margin  # Page width minus margins
+            page_width = self.w - 2 * self.l_margin  
             x_start = (page_width - table_width) / 2
 
             self.set_x(x_start)
@@ -862,9 +788,8 @@ def report_export():
             self.cell(content_column_width, 10, 'Content', 1, 0, 'C')
             self.cell(page_number_column_width, 10, 'Page Number', 1, 1, 'C')
         
-            # Add rows for Table of Contents
             for i, title in enumerate(titles):
-                self.set_x(x_start)  # Ensure x is reset for each new row
+                self.set_x(x_start)  
                 self.cell(content_column_width, 10, title, 1)
                 self.cell(page_number_column_width, 10, str(start_page + i), 1, 1, 'C')
 
@@ -872,14 +797,13 @@ def report_export():
     pdf = PDF()
     #pdf.add_page()
 
-    # **First Page - Title, Description, and Table of Contents**
+    # First Page - Title, Description, and Table of Contents
     pdf.add_page()
     pdf.ln(10)
-    # Title
     pdf.set_font("Arial", 'B', 24)
     pdf.cell(0, 10, "SmartStay Analytics Report", 0, 1, 'C')
 
-    pdf.ln(14)  # Add some space
+    pdf.ln(14)  
 
     # Description
     pdf.set_font("Arial", '', 12)
@@ -922,10 +846,9 @@ def report_export():
     pdf.ln(2)  
 
     # Position to add signature image
-    # pdf.set_xy(160, 250)  
-    # pdf.image("report_assets/sign-ukr.png", w=30) 
+    #pdf.set_xy(160, 250)  
+    #pdf.image("report_assets/sign-ukr.png", w=30) 
 
-    # Text below the signature
     pdf.set_xy(160, 265)  
     pdf.set_font("Arial", '', 12)
     pdf.cell(0, 10, "Utkarsh Roy - SmartStay", 0, 1, 'C')
@@ -943,13 +866,11 @@ def report_export():
     "room_price_distribution.png"
     ]
 
-    # Adding all pages to the PDF
     for image_file in image_files:
         pdf.add_page()
         pdf.image(os.path.join(output_dir, image_file), x=10, y=10, w=190)  
 
     
-    # Saving the PDF
     pdf_output_path = "SmartStay-Analytics-Report.pdf"
     pdf.output(pdf_output_path)
     print(f"File saved as {pdf_output_path}!")
