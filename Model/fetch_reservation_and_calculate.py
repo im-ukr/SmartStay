@@ -30,7 +30,7 @@ import requests
 import csv
 import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
-from geopy.geocoders import Nominatim  # To convert city names to coordinates
+from geopy.geocoders import Nominatim 
 from prettytable import PrettyTable 
 from io import StringIO
 from IPython.display import display, clear_output 
@@ -39,27 +39,20 @@ import google.generativeai as genai
 import db_config
 from preprocess_clv_data import process_clv_data
 
-
-# Configure generative AI API key
 genai.configure(api_key=os.environ['GOOGLE_API_KEY'])
 
-# Load environment variables
 load_dotenv()
 
-# Database connection parameters from db_config
 username = db_config.username
 password = db_config.password
 host = db_config.host
 port = db_config.port
 database = db_config.database
 
-# Create an engine instance with provided credentials
 engine = create_engine(f'mysql+pymysql://{username}:{password}@{host}:{port}/{database}')
 
-# Define the ORM base class
 Base = declarative_base()
 
-# Define the ORM mapping for the rooms table
 class Room(Base):
     __tablename__ = 'rooms'
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -71,7 +64,6 @@ class Room(Base):
 
     reservations = relationship("Reservation", back_populates="room")
 
-# Define the ORM mapping for the reservations table
 class Reservation(Base):
     __tablename__ = 'reservations'
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -87,7 +79,6 @@ class Reservation(Base):
     guest = relationship("Guest", back_populates="reservations")
     room = relationship("Room", back_populates="reservations")
 
-# Define the ORM mapping for the guests table
 class Guest(Base):
     __tablename__ = 'guests'
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -100,7 +91,6 @@ class Guest(Base):
 
     reservations = relationship("Reservation", back_populates="guest")
 
-# Define the ORM mapping for the loyalty table
 class Loyalty(Base):
     __tablename__ = 'loyalty'
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -108,8 +98,6 @@ class Loyalty(Base):
     email_id = Column(String(50), default=None)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
-
-# Define the ORM mapping for the CLV table
 class CLV(Base):
     __tablename__ = 'CLV'
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -132,11 +120,9 @@ class CLV(Base):
 Session = sessionmaker(bind=engine)
 session = Session()
 
-# Function to calculate the duration of stay in days
 def calculate_duration_of_stay(check_in, check_out):
     return (check_out - check_in).days
 
-# Function to calculate the final price based on room price and duration of stay
 def calculate_final_price(room_price, duration):
     return room_price * duration
 
@@ -149,31 +135,25 @@ def fetch_reservation_and_calculate(room_no, session):
     duration = calculate_duration_of_stay(reservation.check_in, reservation.check_out)
     base_amount = calculate_final_price(reservation.room.price, duration)
 
-    # Meal charges calculation
     meal_charge = 0
     if reservation.meal:
         meal_charge = base_amount * 0.11
 
-    # Discount for long stays
     discount = 0
     if duration > 7:
-        discount = base_amount * 0.09
+        discount = base_amount * 0.0
 
-    # Final amount calculation
     final_amount = base_amount + meal_charge - discount
 
-    # Apply GST
     gst = final_amount * 0.05
     total_amount_with_gst = final_amount + gst
 
-    # Rounding the amounts
     final_amount = round(final_amount, 2)
     meal_charge = round(meal_charge, 2)
     discount = round(discount, 2)
     gst = round(gst, 2)
     total_amount_with_gst = round(total_amount_with_gst, 2)
 
-    # Displaying details in a tabular format using PrettyTable
     table = PrettyTable()
     table.field_names = ["Field", "Data"]
     table.add_row(["Guest ID", reservation.g_id])
@@ -195,16 +175,14 @@ def fetch_reservation_and_calculate(room_no, session):
     print("\nReservation Details:")
     print(table)
 
-    # Directory for saving CSV files
     csv_folder = 'csv_files'
 
-    # Create the directory if it doesn't exist
     if not os.path.exists(csv_folder):
         os.makedirs(csv_folder)
 
-    # Define the path for the CSV file
     csv_filename = os.path.join(csv_folder, 'final-rectfied-clv-data.csv')
-    # Adding above data to CLV Table
+
+    # Adding above data to CLV
     clv = CLV(
     guest_id=reservation.g_id,
     guest_name=reservation.guest.name,
@@ -224,27 +202,19 @@ def fetch_reservation_and_calculate(room_no, session):
     session.add(clv)
     session.commit()
 
-    # Define the starting ID
     starting_id = 109
-
-   # Check if the file exists and get the next ID
     file_exists = os.path.isfile(csv_filename)
 
     if file_exists:
-        # Read the existing CSV file
         with open(csv_filename, 'r') as csvfile:
             reader = csv.DictReader(csvfile)
             existing_ids = [int(row['id']) for row in reader if row['id'].isdigit()]
-            # Find the highest ID from the existing file
             last_id = max(existing_ids, default=starting_id - 1)
     else:
-        # If the file doesn't exist, start from the initial ID
         last_id = starting_id - 1
-
-    # Determine the new ID
+        
     new_id = last_id + 1
 
-    # Convert the latest CLV record to a dictionary with the new ID
     latest_clv_data = {
     'id': new_id,
     'guest_id': clv.guest_id,
@@ -268,30 +238,24 @@ def fetch_reservation_and_calculate(room_no, session):
         fieldnames = latest_clv_data.keys()
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
-        # If the file doesn't exist, write the header first
         if not file_exists:
             writer.writeheader()
 
-        # Write the latest record
         writer.writerow(latest_clv_data)
 
     print(f"New CLV record appended to {csv_filename} with ID {new_id}")
 
-    process_clv_data()    # Call the function bro
+    process_clv_data()    
 
-    # Directory for saving receipts
     receipts_folder = 'receipts'
 
-    # Create the directory if it doesn't exist
     if not os.path.exists(receipts_folder):
         os.makedirs(receipts_folder)
 
-    # Generate PDF
     pdf = FPDF()
     pdf.add_page()
     pdf.set_font("Arial", size=12)
     
-    # Generate a random receipt ID and transaction number
     receipt_id = f"R{random.randint(1000, 9999)}"
     transaction_number = f"T{random.randint(100000, 999999)}"
     payment_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -308,13 +272,12 @@ def fetch_reservation_and_calculate(room_no, session):
 
     pdf.multi_cell(0, 10, txt="Thank you for choosing SmartStay for your accommodation needs.")
     
-    # Add booking information table
     pdf.set_font("Arial", size=10)
     pdf.set_fill_color(200, 220, 255)
     pdf.cell(0, 10, txt="Below is your Booking Receipt:", ln=True, align='L', fill=True)
     pdf.ln(1)
 
-    # Add details as cells
+    # Add details
     pdf.set_font("Arial", size=12)
     pdf.cell(50, 10, txt="Guest ID", border=1)
     pdf.cell(0, 10, txt=str(reservation.g_id), border=1, ln=True)
@@ -368,13 +331,11 @@ def fetch_reservation_and_calculate(room_no, session):
     pdf.set_font("Arial",'I', 10)
     pdf.cell(200, 10, txt=f"Time Generated At: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", ln=True)
 
-    # Define the path with the folder and filename
     filename = os.path.join(receipts_folder, f"Booking_Receipt_{reservation.guest.id}.pdf")
     pdf.output(filename)
     
     print(f"PDF receipt saved as {filename}")
     
-    # Send the PDF via email
     try:
         yag = yagmail.SMTP(db_config.email, db_config.passw) 
         subject = "Your Booking Receipt - SmartStay"
