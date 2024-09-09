@@ -29,7 +29,7 @@ def room_price_computation():
     import csv
     import warnings
     warnings.filterwarnings("ignore", category=FutureWarning)
-    from geopy.geocoders import Nominatim  # To convert city names to coordinates
+    from geopy.geocoders import Nominatim 
     from prettytable import PrettyTable 
     from io import StringIO
     from IPython.display import display, clear_output 
@@ -37,26 +37,20 @@ def room_price_computation():
     import google.generativeai as genai
     import db_config
 
-    # Configure generative AI API key
     genai.configure(api_key=os.environ['GOOGLE_API_KEY'])
 
-    # Load environment variables
     load_dotenv()
 
-    # Database connection parameters from db_config
     username = db_config.username
     password = db_config.password
     host = db_config.host
     port = db_config.port
     database = db_config.database
 
-    # Create an engine instance with provided credentials
     engine = create_engine(f'mysql+pymysql://{username}:{password}@{host}:{port}/{database}')
 
-    # Define the ORM base class
     Base = declarative_base()
 
-    # Define the ORM mapping for the rooms table
     class Room(Base):
         __tablename__ = 'rooms'
         id = Column(Integer, primary_key=True, autoincrement=True)
@@ -68,7 +62,6 @@ def room_price_computation():
 
         reservations = relationship("Reservation", back_populates="room")
 
-    # Define the ORM mapping for the reservations table
     class Reservation(Base):
         __tablename__ = 'reservations'
         id = Column(Integer, primary_key=True, autoincrement=True)
@@ -84,7 +77,6 @@ def room_price_computation():
         guest = relationship("Guest", back_populates="reservations")
         room = relationship("Room", back_populates="reservations")
 
-    # Define the ORM mapping for the guests table
     class Guest(Base):
         __tablename__ = 'guests'
         id = Column(Integer, primary_key=True, autoincrement=True)
@@ -97,7 +89,6 @@ def room_price_computation():
 
         reservations = relationship("Reservation", back_populates="guest")
 
-    # Define the ORM mapping for the loyalty table
     class Loyalty(Base):
         __tablename__ = 'loyalty'
         id = Column(Integer, primary_key=True, autoincrement=True)
@@ -108,21 +99,17 @@ def room_price_computation():
     Session = sessionmaker(bind=engine)
     session = Session()
     
-    # Function to apply Early Bird Discount and Late Minute Price Surge
     def early_and_late(current_price, reservation):
         previous_price = current_price
-    
-        # Calculate days between reservation creation and check-in date
+        # Early bird discount
         days_in_advance = abs((reservation.check_in - reservation.created_at).days)
-    
-        # Apply Early Bird Discount
         if days_in_advance >= 90:
-            discount = 0.10 + (days_in_advance - 90) / 10 * 0.05  # 10% - 15% discount
+            discount = 0.10 + (days_in_advance - 90) / 10 * 0.05  
             current_price = int(current_price * (1 - min(discount, 0.15)))
     
         # Apply Late Minute Price Surge
         if days_in_advance < 3:
-            surge = 0.10 + (3 - days_in_advance) / 3 * 0.10  # 10% - 20% increase
+            surge = 0.10 + (3 - days_in_advance) / 3 * 0.10  
             current_price = int(current_price * (1 + min(surge, 0.20)))
     
         percentage_change = ((current_price - previous_price) / previous_price) * 100
@@ -130,23 +117,21 @@ def room_price_computation():
         print(f"Price after Smart Booking Optimization => {current_price} ({sign}{percentage_change:.2f}%)")
         return current_price, f"{sign}{percentage_change:.2f}%" if percentage_change != 0 else "No Change"
 
-    # Function to calculate dynamic price based on room type, weekends, and summer season
     def calculate_dynamic_price(room, reservation):
         prices = []
         labels = []
         changes = []
     
-        base_price = 5000  # Example base price
+        base_price = 5000 
         prices.append(base_price)
         labels.append('Initial Price')
         changes.append('')
         print(f"Initial Price => {base_price}")
 
-        # Adjust price based on room type
         previous_price = base_price
-        if room.room_type == 'D':  # Deluxe room
+        if room.room_type == 'D': 
             base_price += 1000
-        elif room.room_type == 'N':  # Normal room
+        elif room.room_type == 'N':  
             base_price += 500
     
         percentage_change = ((base_price - previous_price) / previous_price) * 100
@@ -155,13 +140,12 @@ def room_price_computation():
         changes.append(f"+{percentage_change:.2f}%" if percentage_change != 0 else "No Change")
         print(f"Price After Room Type Adjustment => {base_price} ({changes[-1]})")
     
-        # Check if the check_in date was a weekend
         previous_price = base_price
         created_at_date = reservation.check_in
-        is_weekend_flag = created_at_date.weekday() >= 5  # 5 represents Saturday, 6 represents Sunday
+        is_weekend_flag = created_at_date.weekday() >= 5 
 
         if is_weekend_flag:
-            base_price *= 1.05  # Increase price by 5% for rooms created on weekends
+            base_price *= 1.05  
 
         percentage_change = ((base_price - previous_price) / previous_price) * 100
         prices.append(int(base_price))
@@ -169,10 +153,9 @@ def room_price_computation():
         changes.append(f"+{percentage_change:.2f}%" if percentage_change != 0 else "No Change")
         print(f"Price After Weekend Surge Charge => {int(base_price)} ({changes[-1]})")
     
-        # Check if the created_at date falls within the summer season (March and April)
         previous_price = base_price
         if created_at_date.month in [3, 4]:
-            base_price *= 1.15  # Increase price by 15% for rooms booked during the summer season
+            base_price *= 1.15  
     
         percentage_change = ((base_price - previous_price) / previous_price) * 100
         prices.append(int(base_price))
@@ -192,12 +175,10 @@ def room_price_computation():
         # Apply high price adjustments based on special periods
         for start_date, end_date, min_multiplier, max_multiplier in high_price_periods:
             if start_date <= created_at_date <= end_date:
-                # Calculate the fraction of the period that has passed
                 total_period = (end_date - start_date).days
                 days_passed = (created_at_date - start_date).days
                 fraction_passed = days_passed / total_period
             
-                # Linearly interpolate price based on the fraction of the period passed
                 current_multiplier = min_multiplier + (max_multiplier - min_multiplier) * fraction_passed
                 previous_price = base_price
                 base_price *= current_multiplier
@@ -206,56 +187,49 @@ def room_price_computation():
                 labels.append('Festive Period Amendments')
                 changes.append(f"+{percentage_change:.2f}%" if percentage_change != 0 else "No Change")
                 print(f"Price After Festive Period Amendments => {int(base_price)} ({changes[-1]})")
-                break  # Exit loop after Festive Periiod adjustment
+                break  
     
         return int(base_price), prices, labels, changes
-
-    # Function to check if the room is booked
+    
     def is_room_booked(room_no, session):
         reservation = session.query(Reservation).join(Room).filter(Room.room_no == room_no, Reservation.check_out == None).first()
         return reservation is not None
 
-    # Function to apply dynamic price based on room availability
     def update_room_price(room_no, session, current_price):
         previous_price = current_price
         if is_room_booked(room_no, session):
-            current_price *= 1.18  # Increase price by 18%
+            current_price *= 1.18  
     
         percentage_change = ((current_price - previous_price) / previous_price) * 100
         print(f"Price After Room Availability Charge => {int(current_price)} ({f'+{percentage_change:.2f}%' if percentage_change != 0 else 'No Change'})")
         return int(current_price), f"+{percentage_change:.2f}%" if percentage_change != 0 else "No Change"
 
-    # Function to apply loyalty discount
     def apply_loyalty_discount(current_price, guest, session):
         previous_price = current_price
 
-        # Check if the guest's email_id is in the loyalty table
         loyalty_member = session.query(Loyalty).filter_by(email_id=guest.email_id).first()
 
         if loyalty_member:
-            current_price = int(current_price * 0.8)  # Apply 20% discount
+            current_price = int(current_price * 0.8)  
 
         percentage_change = ((current_price - previous_price) / previous_price) * 100
         print(f"Price After Loyalty Discount => {current_price} ({f'{percentage_change:.2f}%' if percentage_change != 0 else 'No Change'})")
         return current_price, f"{percentage_change:.2f}%" if percentage_change != 0 else "No Change"
  
-
-    # Function to apply special offer period specific date
     def apply_special_offer(current_price, reservation):
         previous_price = current_price
         offer_start_date = datetime.datetime(2024, 4, 20)
         offer_end_date = datetime.datetime(2024, 4, 30)
     
         if offer_start_date <= reservation.check_in <= offer_end_date:
-            current_price = int(current_price * 0.93)  # Apply 7% discount
+            current_price = int(current_price * 0.93)  
 
-    # Function to apply special offer period specific date
     def apply_special_offer(current_price, reservation):
         previous_price = current_price
         offer_start_date = datetime.datetime(2024, 4, 20)
         offer_end_date = datetime.datetime(2024, 4, 30)
         if offer_start_date <= reservation.check_in <= offer_end_date:
-            current_price = int(current_price * 0.93)  # Apply 7% discount
+            current_price = int(current_price * 0.93)  
 
         # Discount periods for holidays
         holiday_discounts = [
@@ -268,15 +242,13 @@ def room_price_computation():
         # Apply discounts based on holiday periods
         for start_date, end_date, min_discount, max_discount in holiday_discounts:
             if start_date <= reservation.check_in <= end_date:
-                # Calculate the fraction of the period that has passed
                 total_period = (end_date - start_date).days
                 days_passed = (reservation.check_in - start_date).days
                 fraction_passed = days_passed / total_period
-            
-                # Linearly interpolate discount based on the fraction of the period passed
+    
                 current_discount = min_discount + (max_discount - min_discount) * fraction_passed
                 current_price = int(current_price * current_discount)
-                break  # Exit loop after applying discount
+                break  
     
         percentage_change = ((current_price - previous_price) / previous_price) * 100
         print(f"Price After Special Offer Period => {current_price} ({f'{percentage_change:.2f}%' if percentage_change != 0 else 'No Change'})")
@@ -285,7 +257,6 @@ def room_price_computation():
     def apply_peak_load_pricing(current_price, total_rooms, vacant_rooms):
         previous_price = current_price
 
-        # Calculate occupancy rate
         occupancy_rate = ((total_rooms - vacant_rooms) / total_rooms) * 100
 
         # Set thresholds and percentage adjustments
@@ -294,7 +265,6 @@ def room_price_computation():
         low_occupancy_decrease = 0.90    # Decrease by 10% if occupancy is below the low threshold
         high_occupancy_increase = 1.15   # Increase by 15% if occupancy is above the high threshold
 
-        # Adjust prices based on occupancy rate
         if occupancy_rate <= low_occupancy_threshold:
             current_price = int(current_price * low_occupancy_decrease)
         elif occupancy_rate >= high_occupancy_threshold:
@@ -305,7 +275,6 @@ def room_price_computation():
         print(f"Price After Peak-Load Pricing => {current_price} ({f'{sign}{percentage_change:.2f}%' if percentage_change != 0 else 'No Change'})")
         return current_price, f"{sign}{percentage_change:.2f}%" if percentage_change != 0 else "No Change"
 
-    # Function to fetch and display guest information along with reservation and room details
     def get_guest_info(guest_id, session, final_price, prices, labels, changes):
         guest = session.query(Guest).filter_by(id=guest_id).first()
         reservation = session.query(Reservation).filter_by(g_id=guest_id, check_out=None).first()
@@ -314,7 +283,6 @@ def room_price_computation():
         current_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     
         if guest and reservation and room:
-            # Create a PrettyTable instance
             table = PrettyTable()
             table.field_names = ["Field", "Data"]
             table.max_width["Field"] = 20
@@ -329,7 +297,6 @@ def room_price_computation():
             table.add_row(["Room Price", final_price])
             table.add_row(["Booking Time", current_time])
         
-            # Save PrettyTable data to PDF
             save_table_to_pdf(guest.id, session, final_price, prices, labels, changes)
         
             print("\nBooking Information:")
@@ -337,7 +304,6 @@ def room_price_computation():
         else:
             print(f"No guest or reservation found with ID {guest_id}")
 
-    # Function to display animated calculation steps
     def display_price_calculation_animation():
         messages = [
             "\033[1mVerifying base price...🔎\033[0m",
@@ -357,7 +323,6 @@ def room_price_computation():
             time.sleep(1)  
         clear_output(wait=True)
 
-    # Function to save PrettyTable data to PDF
     class PDF(FPDF):
         def header(self):
             self.set_font('Arial', 'B', 12)
@@ -376,13 +341,11 @@ def room_price_computation():
         def add_table(self, table):
             self.set_font('Arial', 'B', 12)
             col_widths = [self.get_string_width(col) for col in table.field_names]
-            col_widths = [max(w, 80) for w in col_widths]  # Minimum column width
-            # Header
+            col_widths = [max(w, 80) for w in col_widths]  
             for i, field in enumerate(table.field_names):
                 self.cell(col_widths[i], 10, field, 1, 0, 'C')
             self.ln()
 
-            # Data
             self.set_font('Arial', '', 12)
             for row in table.rows:
                 for i, field in enumerate(row):
@@ -392,14 +355,12 @@ def room_price_computation():
         def add_narrow_table(self, table):
             self.set_font('Arial', 'B', 12)
             col_widths = [self.get_string_width(col) for col in table.field_names]
-            col_widths = [max(w, 58) for w in col_widths]  # Minimum column width
+            col_widths = [max(w, 58) for w in col_widths] 
 
-            # Header
             for i, field in enumerate(table.field_names):
                 self.cell(col_widths[i], 10, field, 1, 0, 'C')
             self.ln()
 
-            # Data
             self.set_font('Arial', '', 12)
             for row in table.rows:
                 for i, field in enumerate(row):
@@ -418,11 +379,9 @@ def room_price_computation():
         room = session.query(Room).filter_by(id=reservation.r_id).first() if reservation else None
 
         if guest and reservation and room:
-            # Create a PrettyTable instance for the data
             table = PrettyTable()
             table.field_names = ["Field", "Data"]
 
-            # Data to be added
             data = [
                 ["Name", guest.name],
                 ["Address", guest.address],
@@ -435,33 +394,26 @@ def room_price_computation():
                 ["Time Booked At", datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')]
             ]
 
-            # Add rows to the table
             for row in data:
                 table.add_row(row)
 
-            # Calculate max width based on content length
-            table.max_width["Field"] = max(len(row[0]) for row in data) + 5  # +5 for padding
-            table.max_width["Data"] = max(len(str(row[1])) for row in data) + 5  # +5 for padding
+            table.max_width["Field"] = max(len(row[0]) for row in data) + 5 
+            table.max_width["Data"] = max(len(str(row[1])) for row in data) + 5  
 
-            # Directory for saving receipts
             receipts_folder = 'receipts'
 
-            # Create the directory if it doesn't exist
             if not os.path.exists(receipts_folder):
                 os.makedirs(receipts_folder)
 
-            # Create the PDF
             pdf = PDF()
             pdf.add_page()
 
-            # Add header and introductory text
             pdf.set_font("Arial", 'B', 16)
             pdf.cell(200, 10, txt="SmartStay", ln=True, align='C')
             pdf.set_font("Arial", 'I', 12)
             pdf.cell(200, 10, txt="Your Booking Confirmation!", ln=True, align='C')
             pdf.ln(10)
 
-            # Add introduction
             pdf.set_font("Arial", '', 12)
             pdf.multi_cell(0, 10, 
                 "Dear {name},\n\n"
@@ -469,10 +421,8 @@ def room_price_computation():
                 "hope you have a pleasant experience with us. Below are the details of your reservation.\n\n".format(name=guest.name)
             )
         
-            # Add table with booking information
             pdf.add_table(table)
-
-            # Adding Terms & Conditions, edit it if you find some interesting ones  
+  
             pdf.ln(10)
             pdf.set_font("Arial", 'B', 12)
             pdf.cell(0, 10, 'Terms & Conditions:', 0, 1)
@@ -496,7 +446,6 @@ def room_price_computation():
         
             pdf.add_narrow_table(breakdown_table)
 
-            # Add footer
             pdf.ln(10)
             pdf.set_font("Arial", 'I', 10)
             pdf.multi_cell(0, 10,
@@ -505,13 +454,11 @@ def room_price_computation():
                 "Sincerely,\nSmartStay Team"
             )
 
-            # Define the path with the folder and filename
             filename = os.path.join(receipts_folder, f"Booking_info_{guest.id}.pdf")
             pdf.output(filename)
     
             print(f"PDF receipt saved as {filename}")
         
-            # Send the PDF via email
             try:
                 yag = yagmail.SMTP(db_config.email, db_config.passw)
                 subject = "Your Booking Information"
@@ -526,54 +473,39 @@ def room_price_computation():
     # Main function
     def update_room_price_main():
         try:
-            # Create a session
             session = Session()
-        
-            # Take room number input from the user
             room_number_to_update = int(input("Enter the room number to update: "))
-        
-            # Fetch the room with the specific room_no
             room = session.query(Room).filter_by(room_no=room_number_to_update).first()
-    
+
             if room:
-                # Fetch the reservation associated with the room
                 reservation = session.query(Reservation).filter_by(r_id=room.id, check_out=None).first()
     
                 if reservation:
-                    # Fetch the guest associated with the reservation
                     guest = session.query(Guest).filter_by(id=reservation.g_id).first()
-                
-                    # Display the price calculation animation
                     display_price_calculation_animation()
 
-                    # Calculate the new dynamic price
                     new_price, prices, labels, changes = calculate_dynamic_price(room, reservation)
 
-                    # Apply Early Bird Discount and Late Minute Price Surge
                     new_price, change = early_and_late(new_price, reservation)
                     prices.append(new_price)
                     labels.append('Smart Booking Optimization')
                     changes.append(change)
 
-                    # Apply dynamic price based on room availability
                     new_price, change = update_room_price(room.room_no, session, new_price)
                     prices.append(new_price)
                     labels.append('Room Availability Charge')
                     changes.append(change)
     
-                    # Apply loyalty discount if applicable
                     new_price, change = apply_loyalty_discount(new_price, guest, session)
                     prices.append(new_price)
                     labels.append('CLV-oriented Discount')
                     changes.append(change)
-                
-                    # Apply special offer period specific date
+            
                     new_price, change = apply_special_offer(new_price, reservation)
                     prices.append(new_price)
                     labels.append('Special Offer Period')
                     changes.append(change)
 
-                    # query to get total number of rooms
                     result = session.execute(text("SELECT COUNT(*) FROM rooms"))
                     total_rooms = result.scalar()
 
@@ -589,20 +521,16 @@ def room_price_computation():
                     vacant_rooms = result.scalar()
 
 
-                    # Apply peak-load pricing
                     new_price, change = apply_peak_load_pricing(new_price, total_rooms, vacant_rooms)
                     prices.append(new_price)
                     labels.append('Peak-Load Pricing')
                     changes.append(change)
 
-                    # Update the price in the database
                     room.price = new_price
-                    session.commit()  # Commit the changes
+                    session.commit() 
                 
-                    # Save guest information to PDF
                     get_guest_info(guest.id, session, new_price, prices, labels, changes)
                 
-                    # Print the final price update message in bold
                     print(f"\033[1mFinal price updated successfully for room {room_number_to_update} to {new_price}✔️\033[0m")
                 
                     # To verify the update, fetch the data again and display the updated DataFrame
@@ -633,8 +561,6 @@ def room_price_computation():
             print(f"An error occurred: {e}")
 
         finally:
-            # Close the session
             session.close()
-
-    # Execute the main function
+            
     update_room_price_main()
