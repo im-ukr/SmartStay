@@ -38,7 +38,7 @@ passw="password"
 
 # B. (Documentation) Section 1 - Pricing Adjustments Overview
 
-Room price is computed for new bookings in [Option 1](https://github.com/im-ukr/SmartStay/blob/test/Model/room_price_computation.py) on the basis following parameters:
+Room price is computed for new bookings in [Option 1](https://github.com/im-ukr/SmartStay/blob/test/Model/room_price_computation.py) on the basis of following parameters:
 
 ## 1. Room Type Adjustment
 **Description:** The base pricing structure varies by room type, which is classified as either 'Deluxe' or 'Normal'.  
