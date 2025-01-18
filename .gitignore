@@ -1,3 +1,4 @@
 *.env
 
 Model/db_config.py
+notebooks

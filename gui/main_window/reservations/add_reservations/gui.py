@@ -10,6 +10,7 @@ ASSETS_PATH = OUTPUT_PATH / Path("./assets")
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
+<<<<<<< HEAD
 def get_occupied_rooms():
     """
     Retrieve the list of room numbers that are currently occupied (i.e., where check_out is NULL).
@@ -21,12 +22,20 @@ def get_occupied_rooms():
     
     # Return a list of room numbers jo occupied hai
     return [int(room[0]) for room in occupied_rooms]
+=======
+def add_reservations():
+    AddReservations()
+>>>>>>> 58c52204aceae1aceaa0591aaf9e252ac5c95b65
 
 class AddReservations(Frame):
     def __init__(self, parent, controller=None, *args, **kwargs):
         Frame.__init__(self, parent, *args, **kwargs)
         self.parent = parent
+<<<<<<< HEAD
         self.data = {"g_id": "", "check_in": "", "meal": "", "r_id": "", "booked_rooms": ""}
+=======
+        self.data = {"g_id": "", "check_in": "", "meal": "", "r_id": ""}
+>>>>>>> 58c52204aceae1aceaa0591aaf9e252ac5c95b65
 
         self.configure(bg="#FFFFFF")
 
@@ -139,8 +148,12 @@ class AddReservations(Frame):
             highlightthickness=0,
             foreground="#777777",
             font=("Montserrat Bold", 14 * -1),
+<<<<<<< HEAD
             date_pattern="yyyy-mm-dd",
             mindate=datetime.date.today()
+=======
+            date_pattern="yyyy-mm-dd"
+>>>>>>> 58c52204aceae1aceaa0591aaf9e252ac5c95b65
         )
         self.calendar.place(x=280.0, y=259.0, width=120.0, height=22.0)
 
@@ -211,6 +224,7 @@ class AddReservations(Frame):
         )
         button_3.place(x=547.0, y=210.0, width=209.0, height=74.0)
 
+<<<<<<< HEAD
         # Add a dropdown list booked room IDs ka
         self.canvas.create_text(
             550.0,
@@ -262,6 +276,8 @@ class AddReservations(Frame):
         if filter_text in filtered_rooms:
             self.combobox_booked_rooms.set(filter_text)
 
+=======
+>>>>>>> 58c52204aceae1aceaa0591aaf9e252ac5c95b65
     def get_datetime(self):
         # Combine date and time components into a single string
         date = self.data["check_in"][0].get_date()
@@ -270,11 +286,14 @@ class AddReservations(Frame):
 
         return f"{date} {hour}:{minute}:00"  # seconds default to "00"
 
+<<<<<<< HEAD
     def get_booked_rooms(self):
 
         occupied_rooms = get_occupied_rooms()
         return [str(room) for room in occupied_rooms]
 
+=======
+>>>>>>> 58c52204aceae1aceaa0591aaf9e252ac5c95b65
     # Save the data to the database
     def save(self):
         # Check if any fields are empty
@@ -298,9 +317,12 @@ class AddReservations(Frame):
             self.parent.navigate("view")
             self.parent.refresh_entries()
 
+<<<<<<< HEAD
             # Refresh booked rooms dropdown
             self.refresh_booked_rooms()
 
+=======
+>>>>>>> 58c52204aceae1aceaa0591aaf9e252ac5c95b65
             # Clear all fields
             for label in ["g_id", "meal", "r_id"]:
                 self.data[label].delete(0, "end")
