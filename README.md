@@ -16,23 +16,13 @@ git clone https://github.com/im-ukr/SmartStay
 
 Open terminal/cmd/powershell and change directory/folder to the cloned folder. 
 
-The command for the same would be
-
 ```sh
 cd SmartStay
 ```
 
 ### 3: Install the PIP packages/dependencies
 
-After you cd into the repo folder, ensure you see the following cmd/terminal prompt
-
-```sh
-Something.../SmartStay $
-```
-
-If not, repeat the previous step.
-
-After this, run the following command in cmd/terminal:
+Run the following command in cmd/terminal:
 
 ```sh
 pip install -r requirements.txt
@@ -55,11 +45,11 @@ get-content sql/smartstay.sql | mysql -u<username> -p<password>
 This will create and setup the database. If the above command doesn't work then just copy paste the contents of this file in MySQL command line and execute it to set up the database.
 
 (**<u>Note</u>**: Don't **include the "<>" angular brackets** in the command, and replace the `<username>` and `<password>` with the your credentials created in MySQL. For example: -uroot -piamukr77
-when username is root and password is iamukr77.
+where username is root and password is iamukr77.
 
 ### 5: Add database credentials to the app
 
-In `example.env` file(rename it to .env), it should contain `username` and `password` values of MySQL installed on your system. Example content: 
+Create a `.env` file(in root directory), it should contain `username` and `password` values of MySQL installed on your system. Example content: 
 ```sh
 DB_PASSWORD="your-password"
 DB_USER="your-username"
