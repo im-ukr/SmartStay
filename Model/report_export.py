@@ -876,7 +876,7 @@ def report_export():
     print(f"File saved as {pdf_output_path}!")
 
     # EmaiL Part:
-    # Reading email addresses from CSV file -- create a file email.csv
+    # Reading email addresses from CSV file -- from the file report_assets/email.csv
     email_list = []
     with open('report_assets/email.csv', newline='') as csvfile:
         reader = csv.DictReader(csvfile)
