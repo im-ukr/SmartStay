@@ -1,0 +1,16 @@
+guest_id,guest_name,email_id,frequency_of_bookings,days_since_last_booking,average_stay_duration,total_meal_charges,total_revenue_generated
+2,Utkarsh Roy,utkarsh.roy25@gmail.com,2,163,5.0,1401.84,72251.93
+5,Kanak Pandit,kanakpandit17@gmail.com,1,171,11.0,7710.12,75068.53
+941,David M.,david79@gmail.com,7,364,12.57,13660.0,817388.25
+363,Amit K.,amit43@gmail.com,7,197,19.14,16741.0,1226078.7
+183,Michael K.,michael94@gmail.com,11,535,11.82,21305.0,979570.2
+119,Rahul D.,rahul51@gmail.com,12,264,14.0,23224.0,1265995.5
+265,Sunita R.,sunita32@gmail.com,13,184,15.69,26657.0,1623914.25
+267,Priya S.,priya52@gmail.com,17,705,18.88,45008.0,2560051.2
+628,John D.,john54@gmail.com,4,265,7.0,4362.0,248029.95
+914,Emily B.,emily30@gmail.com,16,148,13.5,33403.0,1743385.1
+106,Sophia L.,sophia94@gmail.com,4,240,21.5,8435.0,697507.65
+899,Vikas P.,vikas91@gmail.com,9,184,16.56,18999.0,1258101.6
+14,Isha Nair,isha.nair@gmail.com,1,381,6.0,0.0,37170.0
+132,Jai Sancheti,1032210161@tcetmumbai.in,1,2,5.0,4205.3,44557.07
+124,Devesha Attavar,buzzdevesha@gmail.com,1,-7,6.0,5046.36,53468.48

@@ -1,0 +1,8 @@
+*.env
+
+Model/db_config.py
+Model/report_assets/sign-ukr.png
+Model/receipts
+Model/test_plots
+notebooks/attempt 1.ipynb
+notebooks/attempt 2.ipynb
