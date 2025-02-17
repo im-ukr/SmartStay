@@ -24,11 +24,11 @@ port = '3306'
 database = 'smartstay'
 
 # mail credentials
-email="email-id"
-passw="password"
+email="your-email-id"
+passw="your-password"
 ```
 
-3. Email.csv file containing the email list you'd like to mail the final report to.
+3. [report_assets/email.csv](https://github.com/im-ukr/SmartStay/blob/test/Model/report_assets/email.csv) Append the emails to the list you'd like to mail the final report to.
 
 4. The database set up as mentioned in [sql/smartstay.sql](https://github.com/im-ukr/SmartStay/blob/test/sql/smartstay.sql)
 
