@@ -14,7 +14,7 @@ The content of .env file that should be created by you within this directory is 
 ```sh
 GOOGLE_API_KEY="your_google_api_key_here"
 ```
-2. Create a Database and Email credentials(db_config.py) file in this directory with the following content:
+2. Create a db_config.py file in this (Model) directory with the following content:
 ```sh
 # db_config.py
 username = 'your-username'
