@@ -247,7 +247,7 @@ CREATE TABLE `loyalty` (
   PRIMARY KEY (`id`))
   ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
   
-  insert into `loyalty`(`guest_id`,`email_id`) values (2,'utkarsh.roy25@gmail.com')
+  insert into `loyalty`(`guest_id`,`email_id`) values (2,'utkarsh.roy25@gmail.com');
   
 CREATE TABLE clv (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -266,5 +266,3 @@ CREATE TABLE clv (
     grand_total_amount DECIMAL(10, 2) NOT NULL, 
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
-
-select * from clv;
